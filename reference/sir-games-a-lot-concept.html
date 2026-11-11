@@ -1,0 +1,492 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sir Games-A-Lot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=Bangers&display=swap">
+<style>
+/* Layout: the storefront sign brought online. Royal-blue banner, outlined yellow letters, a red d20 for the O.
+   Comic-panel cards with thick ink borders like their event flyers. Light mode only, by choice. */
+:root{
+  --paper:#ffffff;
+  --cream:#fff8e1;
+  --ink:#121317;
+  --gray:#555b68;
+  --line:#121317;
+  --soft:#e8e9ee;
+  --blue:#1f3f99;
+  --blue-deep:#16306f;
+  --yellow:#f6c431;
+  --red:#d0202e;
+  --green:#1d8a57;
+  --amber:#b26a00;
+  --display:"Archivo Black","Arial Black",Impact,sans-serif;
+  --body:"Archivo",system-ui,-apple-system,sans-serif;
+  --comic:"Bangers","Archivo Black",Impact,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dots{background-image:radial-gradient(rgba(31,63,153,.13) 1.2px,transparent 1.4px);background-size:12px 12px}
+.kick{font-family:var(--comic);font-size:20px;letter-spacing:.06em;color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;padding:13px 20px;border:3px solid var(--ink);background:var(--yellow);color:var(--ink);text-decoration:none;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.white{background:#fff}
+.btn.sm{font-size:12px;padding:8px 12px;border-width:2px;box-shadow:3px 3px 0 var(--ink)}
+.btn.done{background:var(--blue);color:#fff}
+.sample{display:inline-block;font-weight:700;font-size:12px;background:var(--cream);border:2px dashed var(--amber);color:var(--amber);padding:3px 9px}
+
+/* the sign */
+.sign{font-family:var(--display);color:var(--yellow);text-transform:uppercase;letter-spacing:.01em;line-height:1;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink);white-space:nowrap}
+.sign .d20{display:inline-block;width:.78em;height:.86em;vertical-align:-.04em;margin:0 .02em}
+
+/* alert */
+.alert{background:var(--yellow);border-bottom:3px solid var(--ink)}
+.alert .wrap{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-block:9px;font-size:14px;font-weight:600}
+.alert a{color:var(--ink);font-weight:800}
+.alert b{font-family:var(--display);font-weight:400}
+
+/* top */
+.top{background:#fff;border-bottom:3px solid var(--ink)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-block:12px;flex-wrap:wrap}
+.mini-sign{display:inline-flex;align-items:center;background:var(--blue);border:3px solid var(--ink);padding:6px 12px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+.mini-sign .sign{font-size:20px;-webkit-text-stroke:1.2px var(--ink);text-shadow:2px 2px 0 var(--ink)}
+.nav{display:flex;gap:20px;font-weight:700;font-size:15px}
+.nav a{color:var(--ink);text-decoration:none;border-bottom:3px solid transparent}
+.nav a:hover{border-color:var(--red)}
+.phone{font-weight:800;font-size:15px}
+@media (max-width:860px){.nav{display:none}}
+
+/* hero */
+.hero{border-bottom:3px solid var(--ink)}
+.banner{background:var(--blue);border-bottom:3px solid var(--ink);position:relative;overflow:hidden}
+.banner::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.12) 1.4px,transparent 1.6px);background-size:14px 14px}
+.banner .wrap{position:relative;padding-block:38px 34px}
+.banner .sign{font-size:clamp(40px,9.6vw,118px);-webkit-text-stroke:clamp(2px,.35vw,4px) var(--ink);text-shadow:clamp(3px,.6vw,7px) clamp(3px,.6vw,7px) 0 var(--ink);display:block}
+.banner .stripe{height:8px;background:var(--yellow);border-block:3px solid var(--ink);margin-top:22px}
+.hero-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:36px;align-items:start;padding-block:40px 48px}
+.hero-body h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,4.2vw,50px);line-height:1.05;text-transform:uppercase}
+.hero-body h1 em{font-style:normal;color:var(--red)}
+.hero-body p{font-size:18px;color:var(--gray);max-width:52ch;margin:16px 0 0}
+.hero-body .ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.creds{border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);background:#fff}
+.creds div{padding:16px 18px;border-bottom:3px solid var(--ink);display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.creds div:last-child{border-bottom:0}
+.creds b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1}
+.creds span{font-size:14px;color:var(--gray);text-align:right}
+.creds div:first-child{background:var(--red);color:#fff}
+.creds div:first-child span{color:#fff}
+@media (max-width:860px){.hero-body{grid-template-columns:minmax(0,1fr)}}
+
+section.s{padding-block:64px;border-bottom:3px solid var(--ink)}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+.sh h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,4.6vw,52px);line-height:1;text-transform:uppercase;margin-top:4px}
+.sh p{color:var(--gray);max-width:46ch;margin:0}
+#home,section.s{scroll-margin-top:20px}
+
+/* aisles */
+.aisles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.aisle{border:3px solid var(--ink);background:#fff;box-shadow:5px 5px 0 var(--ink);padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.aisle .tag{align-self:flex-start;font-family:var(--comic);font-size:17px;letter-spacing:.05em;padding:2px 10px;border:2px solid var(--ink);background:var(--yellow)}
+.aisle:nth-child(4n+2) .tag{background:var(--red);color:#fff}
+.aisle:nth-child(4n+3) .tag{background:var(--blue);color:#fff}
+.aisle:nth-child(4n+4) .tag{background:#fff}
+.aisle h3{font-family:var(--display);font-weight:400;font-size:20px;line-height:1.1;text-transform:uppercase}
+.aisle p{margin:0;font-size:14.5px;color:var(--gray)}
+.aisle .new{margin-top:auto;font-size:13px;font-weight:800;color:var(--red)}
+@media (max-width:980px){.aisles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.aisles{grid-template-columns:minmax(0,1fr)}}
+
+/* stock */
+.stock-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.search{flex:1 1 260px;min-width:0;font-size:17px;padding:13px 14px;border:3px solid var(--ink);background:#fff;box-shadow:4px 4px 0 var(--ink)}
+.sel{font-weight:700;font-size:14px;padding:12px;border:3px solid var(--ink);background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chips button{font-weight:800;font-size:13px;border:2px solid var(--ink);background:#fff;padding:6px 12px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--yellow)}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;font-weight:600;color:var(--gray);margin:16px 0 10px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.item{border:3px solid var(--ink);background:#fff;padding:14px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;min-width:0}
+.ico{width:44px;height:44px;border:2px solid var(--ink);display:grid;place-items:center;color:#fff}
+.ico svg{width:24px;height:24px}
+.item h3{font-size:16px;font-weight:800;line-height:1.25}
+.item .ln{font-size:13px;color:var(--gray);margin-top:2px}
+.item .row{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.price{font-family:var(--display);font-size:17px}
+.pill{font-size:12px;font-weight:800;padding:3px 8px;border:2px solid currentColor}
+.s-in{color:var(--green)}.s-low{color:var(--amber)}.s-out{color:var(--red)}.s-order{color:var(--blue)}
+.where{grid-column:1/-1;font-size:12px;font-weight:600;color:var(--gray);border-top:2px dashed var(--soft);padding-top:8px}
+.empty{grid-column:1/-1;text-align:center;padding:28px;border:3px dashed var(--ink);font-weight:600}
+
+/* events */
+.ev-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px;align-items:start}
+.flyer{border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;background:#fff}
+.flyer .p1{grid-column:1/-1;background:var(--yellow);padding:22px;border-bottom:3px solid var(--ink)}
+.flyer .p1 .kick{color:var(--ink)}
+.flyer .p1 h3{font-family:var(--comic);font-weight:400;font-size:clamp(38px,5vw,58px);line-height:.95;letter-spacing:.03em;color:var(--red);-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
+.flyer .p1 .when{font-weight:800;font-size:18px;margin-top:8px}
+.flyer .p2{background:var(--blue);color:#fff;padding:18px;border-right:3px solid var(--ink)}
+.flyer .p2 ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-weight:700}
+.flyer .p2 li::before{content:"★ ";color:var(--yellow)}
+.flyer .p3{background:var(--red);color:#fff;padding:18px;font-weight:700}
+.flyer .p3 b{font-family:var(--comic);font-weight:400;font-size:26px;letter-spacing:.04em;color:var(--yellow);display:block;line-height:1}
+.past{margin-top:22px;border-top:3px solid var(--ink)}
+.past div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:2px dashed var(--soft);font-size:14.5px}
+.past span:first-child{font-weight:800}
+.cal{display:grid;gap:10px}
+.ev{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:14px;align-items:center;border:3px solid var(--ink);background:#fff;padding:12px}
+.date{text-align:center;border:2px solid var(--ink);background:var(--yellow);padding:6px 2px;line-height:1.05}
+.date .m{font-weight:800;font-size:12px;text-transform:uppercase}
+.date .d{font-family:var(--display);font-size:26px}
+.date .w{font-size:11px;font-weight:700}
+.ev h4{font-weight:800;font-size:16px}
+.ev .info{font-size:13px;color:var(--gray)}
+.seats{height:8px;border:2px solid var(--ink);margin-top:6px;max-width:220px;background:#fff}
+.seats i{display:block;height:100%;background:var(--blue)}
+.seats.hot i{background:var(--red)}
+.seat-t{font-size:12px;font-weight:700;color:var(--gray);margin-top:3px}
+.ev .act{display:grid;gap:6px;justify-items:end}
+.fee{font-family:var(--display);font-size:15px}
+.evf{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.evf button{font-weight:800;font-size:13px;border:2px solid var(--ink);background:#fff;padding:6px 12px;cursor:pointer}
+.evf button[aria-pressed="true"]{background:var(--red);color:#fff}
+@media (max-width:900px){.ev-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.flyer{grid-template-columns:minmax(0,1fr)}.flyer .p2{border-right:0;border-bottom:3px solid var(--ink)}.ev{grid-template-columns:60px minmax(0,1fr)}.ev .act{grid-column:1/-1;grid-template-columns:auto auto;justify-content:space-between;align-items:center}}
+
+/* d20 roll */
+.rollbox{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:36px;align-items:center}
+.die{width:220px;max-width:100%;aspect-ratio:1;background:none;border:0;padding:0;cursor:pointer;justify-self:center}
+.die svg{width:100%;height:100%;display:block;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.die.spin svg{transform:rotate(720deg) scale(.9)}
+.res{border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);background:#fff}
+.res .top2{background:var(--yellow);border-bottom:3px solid var(--ink);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.res .big{font-family:var(--comic);font-size:64px;line-height:1;color:var(--red);-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
+.res .bd{padding:18px}
+.res p{margin:0}
+.res .note{font-size:13px;color:var(--gray);margin-top:10px}
+@media (max-width:760px){.rollbox{grid-template-columns:minmax(0,1fr)}}
+
+/* reviews */
+.revs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.rv{border:3px solid var(--ink);padding:20px;background:#fff;position:relative}
+.rv:first-child{background:var(--blue);color:#fff}
+.rv:first-child .who{color:#fff;opacity:.8}
+.rv q{font-weight:800;font-size:19px;line-height:1.3;display:block}
+.rv .who{display:block;margin-top:12px;font-size:13px;color:var(--gray);font-weight:600}
+.rv .big{font-family:var(--display);font-size:52px;line-height:1}
+@media (max-width:860px){.revs{grid-template-columns:minmax(0,1fr)}}
+
+/* visit */
+.visit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.vcard{border:3px solid var(--ink);background:#fff;padding:20px;box-shadow:5px 5px 0 var(--ink);min-width:0}
+.vcard h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:20px;margin-bottom:10px}
+.hrs{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.hrs td{padding:7px 0;border-bottom:2px dashed var(--soft);font-size:15px}
+.hrs td:last-child{text-align:right;font-weight:700}
+.hrs tr.today td{color:var(--red);font-weight:800}
+.open{display:inline-flex;align-items:center;gap:8px;font-weight:800;margin-bottom:10px}
+.open i{width:12px;height:12px;border:2px solid var(--ink);background:var(--soft)}
+.open i.on{background:var(--green)}
+.map svg{width:100%;height:auto;display:block;margin-top:10px}
+.copy{margin-top:12px}
+.social{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+@media (max-width:860px){.visit{grid-template-columns:minmax(0,1fr)}}
+
+.foot{background:var(--blue);color:#fff;padding-block:30px;border-top:3px solid var(--ink)}
+.foot .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px}
+.foot .sign{font-size:26px}
+.foot a{color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--yellow);font-weight:800;padding:12px 18px;border:3px solid var(--yellow);opacity:0;transition:.25s;pointer-events:none;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){.die svg,.toast,.btn{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="d20" viewBox="0 0 100 110">
+    <polygon points="50,3 96,29 96,81 50,107 4,81 4,29" fill="#d0202e" stroke="#121317" stroke-width="6" stroke-linejoin="round"/>
+    <polygon points="50,28 75,72 25,72" fill="none" stroke="#121317" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M50 3 L50 28 M96 29 L75 72 M4 29 L25 72 M96 81 L75 72 M4 81 L25 72 M50 107 L75 72 M50 107 L25 72" stroke="#121317" stroke-width="3"/>
+  </symbol>
+</defs></svg>
+
+<div class="alert" role="status"><div class="wrap"><span><b>YES, WE'RE OPEN!</b> Mall construction has closed the main doors. Use the Coulter Street entrance and head to the lower level.</span><a href="#visit">Entrance map →</a></div></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mini-sign" href="#home" aria-label="Sir Games-A-Lot home"><span class="sign">Sir Games-A-L<svg class="d20" aria-hidden="true"><use href="#d20"/></svg>t</span></a>
+    <nav class="nav" aria-label="Sections"><a href="#stock">Stock</a><a href="#events">Events</a><a href="#roll">Roll for it</a><a href="#visit">Visit</a></nav>
+    <span class="phone">705-719-1291</span>
+  </div>
+</header>
+
+<main>
+  <div class="hero" id="home">
+    <div class="banner">
+      <div class="wrap">
+        <span class="sign" role="heading" aria-level="1">Sir Games-A-L<svg class="d20" aria-hidden="true"><use href="#d20"/></svg>t</span>
+        <div class="stripe" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="wrap hero-body">
+      <div>
+        <h2 style="font-family:var(--display);font-weight:400;font-size:clamp(30px,4.2vw,50px);line-height:1.05;text-transform:uppercase">Barrie's game shop for <em style="font-style:normal;color:var(--red)">20+ years.</em></h2>
+        <p>Board games, D&amp;D, Warhammer, miniature paints and everything that goes with them. Lower level of the Bayfield Mall, next to Bowlerama and Service Ontario.</p>
+        <div class="ctas"><a class="btn" href="#stock">Check stock</a><a class="btn blue" href="#events">See events</a></div>
+      </div>
+      <div class="creds">
+        <div><b>21</b><span>years in Barrie<br>(anniversary May 16, 2026)</span></div>
+        <div><b>94%</b><span>recommend us<br>101 Facebook reviews</span></div>
+        <div><b>3.5K</b><span>local gamers follow<br>our weekly updates</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="s dots">
+    <div class="wrap">
+      <div class="sh"><div><div class="kick">What's on the shelves</div><h2>Pick your aisle</h2></div><p>Come in for one game, leave with a new hobby. The staff actually play this stuff, so ask.</p></div>
+      <div class="aisles">
+        <div class="aisle"><span class="tag">Warhammer</span><h3>Armies &amp; codexes</h3><p>40K, starter sets, Kill Team and the big new boxes.</p><span class="new">New: 40K Armageddon</span></div>
+        <div class="aisle"><span class="tag">Paint wall</span><h3>Miniature paints</h3><p>A floor-to-ceiling wall of Citadel paints, brushes and hobby tools.</p><span class="new">Every colour, ask if not</span></div>
+        <div class="aisle"><span class="tag">StarCraft</span><h3>StarCraft minis</h3><p>Terran, Zerg and Protoss for the tabletop miniatures game.</p><span class="new">Restock just landed</span></div>
+        <div class="aisle"><span class="tag">D&amp;D</span><h3>D&amp;D &amp; RPGs</h3><p>Core books, setting books, dice and everything for your table.</p><span class="new">Eberron &amp; Ravenloft in</span></div>
+        <div class="aisle"><span class="tag">Cards</span><h3>Trading card games</h3><p>Booster boxes, packs, sleeves and deck boxes.</p><span class="new">Riftbound: Origins in stock</span></div>
+        <div class="aisle"><span class="tag">Board games</span><h3>Board games</h3><p>Family nights, party games and heavy strategy, wall to wall.</p><span class="new">Ask for a recommendation</span></div>
+        <div class="aisle"><span class="tag">Collect</span><h3>Statues &amp; figures</h3><p>Life-size statues at the door, figures and collectibles inside.</p><span class="new">Say hi on your way in</span></div>
+        <div class="aisle"><span class="tag">Play</span><h3>The playspace</h3><p>Tables in the store to learn a game, paint, or play a match.</p><span class="new">Free to use</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="stock">
+    <div class="wrap">
+      <div class="sh"><div><div class="kick">Stock checker</div><h2>Got it? Check before you drive.</h2></div><p>Search a paint, codex, book or booster. Hold it at the counter, or ask us to order it in.</p></div>
+      <div class="stock-top">
+        <input id="invQ" class="search" type="search" placeholder="Try: Leadbelcher, Armageddon, Riftbound, Eberron…" aria-label="Search stock">
+        <select id="invSort" class="sel" aria-label="Sort"><option value="name">A to Z</option><option value="status">In stock first</option><option value="price">Price, low to high</option></select>
+      </div>
+      <div class="chips" id="invCats" role="group" aria-label="Category"></div>
+      <div class="meta"><span id="invSum"></span><span id="invUpd"></span></div>
+      <div class="items" id="items"></div>
+      <p style="margin-top:16px"><span class="sample">Demo shows sample stock and prices. The live version syncs with the store's real counts.</span></p>
+    </div>
+  </section>
+
+  <section class="s dots" id="events">
+    <div class="wrap">
+      <div class="sh"><div><div class="kick">Events</div><h2>Sales, cosplay &amp; game days</h2></div><p>Every event is on one calendar now, with times, costs and seats, instead of buried in comments.</p></div>
+      <div class="ev-grid">
+        <div>
+          <div class="flyer">
+            <div class="p1"><div class="kick">Our biggest day of the year</div><h3>Anniversary Event!</h3><div class="when">Every May · 10 am to 5 pm · Lower level, Bayfield Mall</div></div>
+            <div class="p2"><ul><li>Sales</li><li>Vendors</li><li>Gaming</li><li>Snacks</li><li>Cosplay contest</li></ul></div>
+            <div class="p3"><b>Come in costume</b>An extra $5 off for anyone in cosplay, all day. Any theme.</div>
+          </div>
+          <div class="past">
+            <div><span>May 16, 2026</span><span>21st Anniversary Event · cosplay contest at 2 pm</span></div>
+            <div><span>Nov 15, 2025</span><span>Nightmare Before Christmas Event · 10 am to 5 pm</span></div>
+            <div><span>May 3, 2025</span><span>20th Anniversary Event · cosplay contest at 3:30 pm</span></div>
+            <div><span>Every year</span><span>May the Fourth · Batman Day</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="evf" id="evCats" role="group" aria-label="Event type"></div>
+          <div class="cal" id="cal"></div>
+          <p style="margin-top:14px"><span class="sample">Example schedule. Real dates, costs and seats come from the store.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="roll">
+    <div class="wrap rollbox">
+      <button class="die" id="die" type="button" aria-label="Roll the twenty-sided die">
+        <svg viewBox="0 0 100 110" aria-hidden="true"><use href="#d20"/><text id="dieNum" x="50" y="62" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="17" fill="#fff" stroke="#121317" stroke-width="3" paint-order="stroke">20</text></svg>
+      </button>
+      <div>
+        <div class="kick">The Sir Games-A-Lot tradition</div>
+        <h2 style="font-family:var(--display);font-weight:400;font-size:clamp(30px,4.6vw,52px);line-height:1;text-transform:uppercase;margin:4px 0 18px">Take 10% off, or roll for it.</h2>
+        <div class="res" aria-live="polite">
+          <div class="top2"><span style="font-weight:800">Tap the die</span><span class="big" id="rNum">?</span></div>
+          <div class="bd"><p id="rText">At our event days you choose: a sure 10% off, or roll a d20 for 1 to 20% off. Feeling lucky?</p><p class="note">Just for fun here. The real roll happens at the counter on event days.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s dots">
+    <div class="wrap">
+      <div class="sh"><div><div class="kick">Reviews</div><h2>Locals say it best</h2></div></div>
+      <div class="revs">
+        <div class="rv"><span class="big">94%</span><q>recommend us</q><span class="who">101 reviews on Facebook</span></div>
+        <div class="rv"><q>Excellent service, selection, prices, hours and playspace.</q><span class="who">Facebook review</span></div>
+        <div class="rv"><q>Staff is great, selection is huge.</q><span class="who">Facebook review</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="visit">
+    <div class="wrap">
+      <div class="sh"><div><div class="kick">Visit</div><h2>Lower level, Bayfield Mall</h2></div><p>Near Bowlerama and Service Ontario. Main doors are closed for construction, so use the Coulter Street side.</p></div>
+      <div class="visit">
+        <div class="vcard">
+          <h3>Hours</h3>
+          <div class="open"><i id="openDot"></i><span id="openText">Checking…</span></div>
+          <table class="hrs"><tbody id="hours"></tbody></table>
+          <p style="font-size:13px;color:var(--gray);margin:10px 0 0">Holiday hours change. Call to confirm.</p>
+        </div>
+        <div class="vcard map">
+          <h3>Find us</h3>
+          <p style="margin:0;font-weight:700">320 Bayfield Street, Barrie, ON L4M 3C1</p>
+          <p style="margin:4px 0 0;color:var(--gray)">705-719-1291 · sirgamesalot@rogers.com</p>
+          <svg viewBox="0 0 320 190" role="img" aria-label="Map: main Bayfield Street doors closed. Enter from the Coulter Street side and go to the lower level, near Bowlerama and Service Ontario.">
+            <rect x="40" y="20" width="236" height="132" fill="#fff8e1" stroke="#121317" stroke-width="3"/>
+            <text x="158" y="40" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="11" fill="#555b68">BAYFIELD MALL · LOWER LEVEL</text>
+            <rect x="0" y="162" width="290" height="24" fill="#e8e9ee" stroke="#121317" stroke-width="2"/>
+            <text x="145" y="178" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="10" fill="#121317">BAYFIELD ST</text>
+            <rect x="290" y="0" width="28" height="186" fill="#e8e9ee" stroke="#121317" stroke-width="2"/>
+            <text x="305" y="92" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="10" fill="#121317" transform="rotate(90 305 92)">COULTER ST</text>
+            <g transform="translate(158 152)"><line x1="-11" y1="-9" x2="11" y2="9" stroke="#d0202e" stroke-width="5"/><line x1="11" y1="-9" x2="-11" y2="9" stroke="#d0202e" stroke-width="5"/></g>
+            <text x="158" y="134" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="11" fill="#d0202e">MAIN DOORS CLOSED</text>
+            <path d="M288 80 H266" stroke="#1d8a57" stroke-width="5" marker-end="url(#ar)"/>
+            <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#1d8a57"/></marker></defs>
+            <text x="246" y="103" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="11" fill="#1d8a57">ENTER HERE</text>
+            <rect x="106" y="62" width="104" height="38" fill="#1f3f99" stroke="#121317" stroke-width="3"/>
+            <text x="158" y="86" text-anchor="middle" font-family="Archivo Black,sans-serif" font-size="11" fill="#f6c431">SIR GAMES-A-LOT</text>
+            <rect x="52" y="104" width="44" height="22" fill="#fff" stroke="#121317" stroke-width="2"/><text x="74" y="119" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="700" font-size="8" fill="#121317">Bowlerama</text>
+            <rect x="220" y="104" width="50" height="22" fill="#fff" stroke="#121317" stroke-width="2"/><text x="245" y="114" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="700" font-size="7.5" fill="#121317">Service</text><text x="245" y="122" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="700" font-size="7.5" fill="#121317">Ontario</text>
+          </svg>
+          <div class="social"><button class="btn sm white copy" id="copyAddr" type="button">Copy address</button><a class="btn sm white" href="https://www.facebook.com/profile.php?id=100057495547644" target="_blank" rel="noopener">Facebook</a><a class="btn sm white" href="https://www.instagram.com/iamsirgamesalot/" target="_blank" rel="noopener">Instagram</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap"><span class="sign">Sir Games-A-L<svg class="d20" aria-hidden="true"><use href="#d20"/></svg>t</span><span>Barrie since 2005 · Concept homepage by Kooht Studio</span></div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+function $(s){return document.querySelector(s)}
+function toast(t){var el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show')},2400)}
+
+/* ---------- stock ---------- */
+var ICON={
+  'Warhammer':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l3 4-3 3-3-3z"/><path d="M8 21v-5l4-6 4 6v5"/></svg>',
+  'Paints':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="7" y="8" width="10" height="13"/><path d="M9 8V4h6v4"/></svg>',
+  'StarCraft':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>',
+  'D&D':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12,3 20,8 20,16 12,21 4,16 4,8"/><polygon points="12,8 15.5,14 8.5,14"/></svg>',
+  'Cards':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="4" width="11" height="15"/><path d="M6 7l-2 .5 2.6 13 7-1.4"/></svg>',
+  'Board games':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="16" cy="16" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>'
+};
+var CC={'Warhammer':'#1f3f99','Paints':'#d0202e','StarCraft':'#121317','D&D':'#7a2a2a','Cards':'#5b3fa6','Board games':'#1d8a57'};
+var inv=[
+  ['Warhammer 40,000: Armageddon','Launch box, two armies and rules','Warhammer',0,'low','Front display'],
+  ['Codex: Space Marines','Warhammer 40,000 rules book','Warhammer',75,'in','Warhammer wall · Codexes'],
+  ['Combat Patrol: Space Marines','Starter army','Warhammer',170,'in','Warhammer wall · Armies'],
+  ['Kill Team starter set','Two squads, terrain and rules','Warhammer',100,'order','Warhammer wall'],
+  ['Leadbelcher','Citadel Base paint, 12 ml','Paints',7.25,'in','Paint wall · Base'],
+  ['Abaddon Black','Citadel Base paint, 12 ml','Paints',7.25,'in','Paint wall · Base'],
+  ['Macragge Blue','Citadel Base paint, 12 ml','Paints',7.25,'out','Paint wall · Base'],
+  ['Nuln Oil','Citadel Shade, 18 ml','Paints',10.75,'low','Paint wall · Shade'],
+  ['StarCraft Terran starter','Tabletop miniatures game','StarCraft',0,'in','Minis aisle · just restocked'],
+  ['StarCraft Zerg starter','Tabletop miniatures game','StarCraft',0,'in','Minis aisle · just restocked'],
+  ['D&D Player\'s Handbook','2024 core rulebook','D&D',69.99,'in','RPG shelf'],
+  ['Eberron setting book','D&D campaign setting','D&D',0,'in','RPG shelf · new arrivals'],
+  ['Polyhedral dice set','7 dice, d4 to d20','D&D',12.99,'in','Dice bins by the till'],
+  ['Riftbound: Origins booster','League of Legends TCG','Cards',0,'low','Front counter'],
+  ['Matte card sleeves, 100 ct','Standard size','Cards',14.99,'in','Card wall'],
+  ['Catan','Base game, 3 to 4 players','Board games',64.99,'in','Board game wall · Strategy'],
+  ['Wingspan','Engine-builder, 1 to 5 players','Board games',79.99,'low','Board game wall · Strategy'],
+  ['Codenames','Party game, 2 to 8+ players','Board games',29.99,'out','Board game wall · Party']
+];
+var ST={in:['In stock','s-in',0],low:['Only a few left','s-low',1],order:['Order in · ~1 week','s-order',2],out:['Out of stock','s-out',3]};
+var st={q:'',cat:'All',sort:'name'},held={};
+var catBox=$('#invCats');
+['All'].concat(Object.keys(ICON)).forEach(function(c){var b=document.createElement('button');b.type='button';b.textContent=c;b.id='cat-'+c.replace(/\W+/g,'-').toLowerCase();b.onclick=function(){st.cat=c;draw()};catBox.appendChild(b)});
+function draw(){
+  Array.prototype.forEach.call(catBox.children,function(b){b.setAttribute('aria-pressed',b.textContent===st.cat)});
+  var q=st.q.toLowerCase().trim();
+  var list=inv.filter(function(x){return (st.cat==='All'||x[2]===st.cat)&&(!q||(x[0]+' '+x[1]+' '+x[2]).toLowerCase().indexOf(q)>-1)});
+  list.sort(function(a,b){if(st.sort==='price')return (a[3]||999)-(b[3]||999);if(st.sort==='status')return ST[a[4]][2]-ST[b[4]][2]||a[0].localeCompare(b[0]);return a[0].localeCompare(b[0])});
+  var box=$('#items');box.innerHTML='';
+  if(!list.length){var e=document.createElement('div');e.className='empty';e.textContent='Nothing matches that. Call 705-719-1291 and we\'ll check the back room.';box.appendChild(e)}
+  list.forEach(function(x){
+    var k=x[0],s=ST[x[4]],avail=x[4]==='in'||x[4]==='low';
+    var el=document.createElement('div');el.className='item';
+    el.innerHTML='<div class="ico" style="background:'+CC[x[2]]+'">'+ICON[x[2]]+'</div><div><h3></h3><div class="ln"></div></div>'+
+      '<div class="row"><span class="price">'+(x[3]?'$'+x[3].toFixed(2):'Ask')+'</span><span class="pill '+s[1]+'">'+s[0]+'</span><button type="button" class="btn sm '+(held[k]?'done':'white')+'" data-k="'+k.replace(/"/g,'')+'">'+(held[k]?(avail?'Held 24 h ✓':'Requested ✓'):(avail?'Hold it':x[4]==='out'?'Tell me when back':'Order it in'))+'</button></div><div class="where">📍 '+x[5]+'</div>';
+    el.querySelector('h3').textContent=x[0];el.querySelector('.ln').textContent=x[1];
+    box.appendChild(el);
+  });
+  var c={in:0,low:0,out:0,order:0};inv.forEach(function(x){c[x[4]]++});
+  $('#invSum').textContent=c.in+' in stock · '+c.low+' low · '+(c.out+c.order)+' to order';
+}
+$('#items').addEventListener('click',function(e){var b=e.target.closest('button[data-k]');if(!b)return;held[b.dataset.k]=!held[b.dataset.k];if(held[b.dataset.k])toast('Done. We\'ll set it aside at the counter.');draw()});
+$('#invQ').addEventListener('input',function(e){st.q=e.target.value;draw()});
+$('#invSort').addEventListener('change',function(e){st.sort=e.target.value;draw()});
+var up=new Date();up.setMinutes(up.getMinutes()-40);
+$('#invUpd').textContent='Counts updated today at '+up.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+draw();
+
+/* ---------- events ---------- */
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var today=new Date();today.setHours(0,0,0,0);
+function nth(y,m,wd,n){var d=new Date(y,m,1);while(d.getDay()!==wd)d.setDate(d.getDate()+1);d.setDate(d.getDate()+7*(n-1));return d}
+function last(y,m,wd){var d=new Date(y,m+1,0);while(d.getDay()!==wd)d.setDate(d.getDate()-1);return d}
+var evs=[];
+for(var k=0;k<3;k++){var y=today.getFullYear(),m=today.getMonth()+k,yy=y+Math.floor(m/12),mm=m%12;
+  evs.push({t:'Warhammer 40K tournament',c:'Warhammer',d:nth(yy,mm,6,3),time:'10 am – 6 pm',fee:'$25',seats:16,taken:13-k*3,note:'2,000 points · 3 rounds'});
+  evs.push({t:'Paint night',c:'Paint night',d:last(yy,mm,4),time:'6 – 9 pm',fee:'$15',seats:12,taken:7+k,note:'Paints and a mini included'});
+  evs.push({t:'Riftbound league night',c:'Cards',d:nth(yy,mm,5,2),time:'6 – 10 pm',fee:'$10',seats:24,taken:15+k*2,note:'League of Legends TCG · prize support'});}
+for(var w=0;w<5;w++){var f=new Date(today);f.setDate(f.getDate()+((5-f.getDay()+7)%7)+7*w);evs.push({t:'D&D one-shot',c:'D&D',d:f,time:'6:30 – 10 pm',fee:'$10',seats:6,taken:[5,3,6,2,4][w],note:'New players welcome'})}
+evs.push({t:'Holiday shopping event',c:'Store event',d:(function(){var d=nth(today.getFullYear(),10,6,3);return d<today?nth(today.getFullYear(),11,6,1):d})(),time:'10 am – 5 pm',fee:'Free',seats:0,taken:0,note:'Sales, vendors, cosplay contest · d20 discounts'});
+evs=evs.filter(function(e){return e.d>=today}).sort(function(a,b){return a.d-b.d}).slice(0,8);
+var evC='All',saved={},evBox=$('#evCats');
+['All','Store event','Warhammer','D&D','Cards','Paint night'].forEach(function(c){var b=document.createElement('button');b.type='button';b.textContent=c;b.id='ev-'+c.replace(/\W+/g,'-').toLowerCase();b.onclick=function(){evC=c;drawEv()};evBox.appendChild(b)});
+function drawEv(){
+  Array.prototype.forEach.call(evBox.children,function(b){b.setAttribute('aria-pressed',b.textContent===evC)});
+  var cal=$('#cal');cal.innerHTML='';
+  evs.filter(function(e){return evC==='All'||e.c===evC}).forEach(function(e){
+    var id=e.t+e.d.toDateString(),mine=!!saved[id],tk=Math.min(e.seats,e.taken+(mine?1:0)),left=e.seats-tk;
+    var el=document.createElement('div');el.className='ev';
+    el.innerHTML='<div class="date"><div class="m">'+MON[e.d.getMonth()]+'</div><div class="d">'+e.d.getDate()+'</div><div class="w">'+WD[e.d.getDay()]+'</div></div>'+
+      '<div style="min-width:0"><h4>'+e.t+'</h4><div class="info">'+e.time+' · '+e.note+'</div>'+
+      (e.seats?'<div class="seats'+(left<=2?' hot':'')+'"><i style="width:'+Math.round(tk/e.seats*100)+'%"></i></div><div class="seat-t">'+(left>0?left+' of '+e.seats+' seats left':'Full · join the waitlist')+'</div>':'<div class="seat-t">Open to everyone</div>')+'</div>'+
+      '<div class="act"><span class="fee">'+e.fee+'</span>'+(e.seats?'<button type="button" class="btn sm '+(mine?'done':'white')+'" data-e="'+id+'">'+(mine?'Saved ✓':left>0?'Save a seat':'Waitlist')+'</button>':'<span class="seat-t">Drop in</span>')+'</div>';
+    cal.appendChild(el);
+  });
+}
+$('#cal').addEventListener('click',function(e){var b=e.target.closest('button[data-e]');if(!b)return;saved[b.dataset.e]=!saved[b.dataset.e];drawEv()});
+drawEv();
+
+/* ---------- d20 ---------- */
+var die=$('#die');
+die.onclick=function(){
+  die.classList.remove('spin');void die.offsetWidth;die.classList.add('spin');
+  var n=1+Math.floor(Math.random()*20);
+  setTimeout(function(){
+    $('#dieNum').textContent=n;$('#rNum').textContent=n+'%';
+    $('#rText').textContent=n===20?'Natural 20! That\'s 20% off. The whole counter cheers.':n>10?'You rolled '+n+'% off. Better than the sure 10%. The dice gods smile on you.':n===10?'Exactly 10%. Same as the safe pick, but way more fun.':n===1?'A natural 1. 1% off. Legends are built on moments like this.':'Only '+n+'% off. The sure 10% would have won. Roll again next event?';
+  },380);
+};
+
+/* ---------- hours ---------- */
+var full=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var hrs=[[11,17],[9.5,21],[9.5,21],[9.5,21],[9.5,21],[9.5,21],[9.5,18]];
+function fmt(h){var hh=Math.floor(h),m=h%1?':30':'',ap=hh>=12?'pm':'am';hh=hh%12||12;return hh+m+' '+ap}
+var now=new Date(),d=now.getDay(),t=now.getHours()+now.getMinutes()/60;
+$('#hours').innerHTML=[1,2,3,4,5,6,0].map(function(i){return '<tr'+(i===d?' class="today"':'')+'><td>'+full[i]+'</td><td>'+fmt(hrs[i][0])+' – '+fmt(hrs[i][1])+'</td></tr>'}).join('');
+var open=t>=hrs[d][0]&&t<hrs[d][1];
+$('#openDot').className=open?'on':'';
+$('#openText').textContent=open?'Open now until '+fmt(hrs[d][1]):'Closed now · opens '+fmt(hrs[t<hrs[d][0]?d:(d+1)%7][0])+(t<hrs[d][0]?' today':' tomorrow');
+$('#copyAddr').onclick=function(){var b=this,x='320 Bayfield Street, Barrie, ON L4M 3C1';try{navigator.clipboard.writeText(x).then(function(){b.textContent='Copied ✓'},function(){b.textContent=x})}catch(e){b.textContent=x}};
+})();
+</script>
+
+</body></html>
