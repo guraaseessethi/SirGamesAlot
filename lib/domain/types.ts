@@ -45,6 +45,8 @@ export interface Product extends InventoryItem {
   lowThreshold: number;
   /** True when staff changed status, shelf or threshold by hand. */
   overridden: boolean;
+  /** True when staff pinned the status by hand (so POS counts no longer change it). */
+  statusOverridden: boolean;
 }
 
 export type HoldStatus = 'active' | 'picked-up' | 'expired' | 'cancelled';
