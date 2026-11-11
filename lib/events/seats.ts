@@ -25,14 +25,17 @@ export function seatSummary(capacity: number, signups: EventSignup[]): SeatSumma
     left,
     waitlist,
     full: hasSeats && left === 0,
-    percentTaken: hasSeats ? Math.min(100, Math.round((Math.min(taken, capacity) / capacity) * 100)) : 0,
+    percentTaken: hasSeats
+      ? Math.min(100, Math.round((Math.min(taken, capacity) / capacity) * 100))
+      : 0,
   };
 }
 
 /** Text equivalent of the seats bar, for screen readers and the visible label. */
 export function seatText(s: SeatSummary): string {
   if (!s.hasSeats) return 'Open to everyone';
-  if (s.full) return s.waitlist > 0 ? `Full · ${s.waitlist} on the waitlist` : 'Full · join the waitlist';
+  if (s.full)
+    return s.waitlist > 0 ? `Full · ${s.waitlist} on the waitlist` : 'Full · join the waitlist';
   return `${s.left} of ${s.capacity} seats left`;
 }
 
@@ -42,8 +45,13 @@ const norm = (e: string) => e.trim().toLowerCase();
 const ACTIVE = new Set<EventSignup['status']>(['seated', 'waitlist', 'checked-in']);
 
 /** Decide what happens when someone asks for a seat. Never double-books one email. */
-export function decideSignup(capacity: number, signups: EventSignup[], email: string): SignupDecision {
-  if (signups.some((s) => ACTIVE.has(s.status) && norm(s.email) === norm(email))) return 'duplicate';
+export function decideSignup(
+  capacity: number,
+  signups: EventSignup[],
+  email: string,
+): SignupDecision {
+  if (signups.some((s) => ACTIVE.has(s.status) && norm(s.email) === norm(email)))
+    return 'duplicate';
   return seatSummary(capacity, signups).left > 0 ? 'seated' : 'waitlist';
 }
 

@@ -82,10 +82,15 @@ export function isUpcoming(event: Pick<StoreEvent, 'endsAt'>, now: Date): boolea
 
 export function splitEvents(events: StoreEvent[], now: Date) {
   const upcoming = events.filter((e) => isUpcoming(e, now));
-  const past = events.filter((e) => !isUpcoming(e, now)).sort((a, b) => b.startsAt.localeCompare(a.startsAt));
+  const past = events
+    .filter((e) => !isUpcoming(e, now))
+    .sort((a, b) => b.startsAt.localeCompare(a.startsAt));
   return { upcoming, past };
 }
 
-export function formatEventDate(event: Pick<StoreEvent, 'startsAt'>, pattern = 'EEEE, MMMM d, yyyy'): string {
+export function formatEventDate(
+  event: Pick<StoreEvent, 'startsAt'>,
+  pattern = 'EEEE, MMMM d, yyyy',
+): string {
   return formatInTimeZone(new Date(event.startsAt), STORE_TZ, pattern);
 }

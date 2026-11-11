@@ -3,7 +3,11 @@ import type { EventSignup, SignupStatus } from '@/lib/domain/types';
 import { canPromote, decideSignup, nextToPromote, seatSummary, seatText } from './seats';
 
 let n = 0;
-const s = (status: SignupStatus, email = `p${(n += 1)}@x.test`, createdAt = `2026-11-0${(n % 9) + 1}T10:00:00Z`): EventSignup => ({
+const s = (
+  status: SignupStatus,
+  email = `p${(n += 1)}@x.test`,
+  createdAt = `2026-11-0${(n % 9) + 1}T10:00:00Z`,
+): EventSignup => ({
   id: `s${n}`,
   eventId: 'e1',
   name: 'P',
@@ -15,12 +19,21 @@ const s = (status: SignupStatus, email = `p${(n += 1)}@x.test`, createdAt = `202
 
 describe('seat summary', () => {
   it('counts seated and checked-in people as taking a seat', () => {
-    const sum = seatSummary(4, [s('seated'), s('checked-in'), s('waitlist'), s('cancelled'), s('no-show')]);
+    const sum = seatSummary(4, [
+      s('seated'),
+      s('checked-in'),
+      s('waitlist'),
+      s('cancelled'),
+      s('no-show'),
+    ]);
     expect(sum).toMatchObject({ taken: 2, left: 2, waitlist: 1, full: false, percentTaken: 50 });
   });
   it('is full exactly at capacity and never negative', () => {
     expect(seatSummary(2, [s('seated'), s('seated')]).full).toBe(true);
-    expect(seatSummary(1, [s('seated'), s('seated')])).toMatchObject({ left: 0, percentTaken: 100 });
+    expect(seatSummary(1, [s('seated'), s('seated')])).toMatchObject({
+      left: 0,
+      percentTaken: 100,
+    });
   });
   it('treats capacity 0 as open to everyone', () => {
     const sum = seatSummary(0, []);
@@ -29,7 +42,14 @@ describe('seat summary', () => {
     expect(seatText(sum)).toBe('Open to everyone');
   });
   it('has a plain-text equivalent of the bar', () => {
-    expect(seatText(seatSummary(16, Array.from({ length: 13 }, () => s('seated'))))).toBe('3 of 16 seats left');
+    expect(
+      seatText(
+        seatSummary(
+          16,
+          Array.from({ length: 13 }, () => s('seated')),
+        ),
+      ),
+    ).toBe('3 of 16 seats left');
     expect(seatText(seatSummary(1, [s('seated')]))).toBe('Full · join the waitlist');
     expect(seatText(seatSummary(1, [s('seated'), s('waitlist')]))).toBe('Full · 1 on the waitlist');
   });

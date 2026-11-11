@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { useRepoData, useNow } from '@/lib/data/hooks';
@@ -12,7 +13,10 @@ import { STORE } from '@/lib/content/store';
 import { formatTime } from '@/lib/hours/hours';
 import { formatFee } from '@/lib/money';
 import { SeatMeter } from './SeatMeter';
-import { SignupDialog } from './SignupDialog';
+
+// Loaded on demand, like the stock request form.
+const loadSignup = () => import('./SignupDialog');
+const SignupDialog = dynamic(() => loadSignup().then((m) => m.SignupDialog), { ssr: false });
 import styles from './EventDetail.module.css';
 
 export function EventDetail({
@@ -28,7 +32,10 @@ export function EventDetail({
 }) {
   // Events added in the admin demo only exist in this browser, so look the slug up here too.
   const event = useRepoData((r) => r.getEventBySlug(slug), initialEvent);
-  const signups = useRepoData((r) => (event ? r.listSignups(event.id) : Promise.resolve([])), initialSignups);
+  const signups = useRepoData(
+    (r) => (event ? r.listSignups(event.id) : Promise.resolve([])),
+    initialSignups,
+  );
   const now = useNow(initialNowIso);
   const [open, setOpen] = useState(false);
 
@@ -69,7 +76,9 @@ export function EventDetail({
           </div>
           <div>
             <dt>Cost</dt>
-            <dd>{event.feeCents > 0 ? `${formatFee(event.feeCents)}, pay at the counter` : 'Free'}</dd>
+            <dd>
+              {event.feeCents > 0 ? `${formatFee(event.feeCents)}, pay at the counter` : 'Free'}
+            </dd>
           </div>
           <div>
             <dt>Seats</dt>
@@ -80,7 +89,11 @@ export function EventDetail({
         </dl>
         {upcoming ? (
           <div className={styles.actions}>
-            {summary.hasSeats && <Button onClick={() => setOpen(true)}>{summary.full ? 'Join the waitlist' : 'Save a seat'}</Button>}
+            {summary.hasSeats && (
+              <Button onClick={() => setOpen(true)}>
+                {summary.full ? 'Join the waitlist' : 'Save a seat'}
+              </Button>
+            )}
             <Button variant="white" onClick={() => downloadIcs(event)}>
               Add to calendar (.ics)
             </Button>
@@ -89,10 +102,12 @@ export function EventDetail({
             </Link>
           </div>
         ) : (
-          <p className={styles.past}>This event has already happened. See what&apos;s coming up on the events page.</p>
+          <p className={styles.past}>
+            This event has already happened. See what&apos;s coming up on the events page.
+          </p>
         )}
       </div>
-      <SignupDialog event={open ? event : null} onClose={() => setOpen(false)} />
+      {open && <SignupDialog event={event} onClose={() => setOpen(false)} />}
     </article>
   );
 }

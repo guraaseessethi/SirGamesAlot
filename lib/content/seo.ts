@@ -8,7 +8,8 @@ export function storeJsonLd(settings: Pick<Settings, 'weeklyHours'>) {
     '@type': 'Store',
     '@id': `${SITE_URL}/#store`,
     name: STORE.name,
-    description: "Barrie's independent game and hobby store: board games, D&D and RPGs, Warhammer and Citadel paints, StarCraft minis, trading card games and a free in-store playspace.",
+    description:
+      "Barrie's independent game and hobby store: board games, D&D and RPGs, Warhammer and Citadel paints, StarCraft minis, trading card games and a free in-store playspace.",
     url: SITE_URL,
     telephone: '+1-705-719-1291',
     email: STORE.email,

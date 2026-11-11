@@ -30,7 +30,12 @@ export default async function EventPage({ params }: Params) {
     <>
       {event && <JsonLd data={eventJsonLd(event, seats)} />}
       <div className={`wrap ${sections.pageBody}`}>
-        <EventDetail slug={slug} initialEvent={event} initialSignups={signups} initialNowIso={new Date().toISOString()} />
+        <EventDetail
+          slug={slug}
+          initialEvent={event}
+          initialSignups={signups}
+          initialNowIso={new Date().toISOString()}
+        />
       </div>
     </>
   );

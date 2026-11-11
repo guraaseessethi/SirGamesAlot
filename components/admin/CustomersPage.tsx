@@ -34,8 +34,24 @@ export function CustomersPage() {
     downloadCsv(
       'customers.csv',
       toCsv(
-        ['Name', 'Email', 'Phone', 'Interests', 'Marketing consent', 'Consent date (UTC)', 'Consent source'],
-        list.map((c) => [c.name, c.email, c.phone, c.interests.join('; '), c.marketingConsent ? 'yes' : 'no', c.consentAt, c.consentSource]),
+        [
+          'Name',
+          'Email',
+          'Phone',
+          'Interests',
+          'Marketing consent',
+          'Consent date (UTC)',
+          'Consent source',
+        ],
+        list.map((c) => [
+          c.name,
+          c.email,
+          c.phone,
+          c.interests.join('; '),
+          c.marketingConsent ? 'yes' : 'no',
+          c.consentAt,
+          c.consentSource,
+        ]),
       ),
     );
     toast(`Exported ${list.length} customers.`);
@@ -44,7 +60,9 @@ export function CustomersPage() {
   return (
     <>
       <PageTitle title="Customers">
-        People who held an item, ordered something or saved an event seat. Hold, order and event confirmations are transactional. Only people who ticked the news box can get newsletters or &ldquo;new stock&rdquo; emails (CASL).
+        People who held an item, ordered something or saved an event seat. Hold, order and event
+        confirmations are transactional. Only people who ticked the news box can get newsletters or
+        &ldquo;new stock&rdquo; emails (CASL).
       </PageTitle>
       <Panel
         id="customers"
@@ -59,11 +77,25 @@ export function CustomersPage() {
           <label className="sr-only" htmlFor="cust-q">
             Search customers
           </label>
-          <input id="cust-q" className={styles.inline} style={{ maxWidth: 240 }} type="search" placeholder="Search name, email or phone" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input
+            id="cust-q"
+            className={styles.inline}
+            style={{ maxWidth: 240 }}
+            type="search"
+            placeholder="Search name, email or phone"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
           <label className="sr-only" htmlFor="cust-int">
             Interest
           </label>
-          <select id="cust-int" className={styles.inline} style={{ maxWidth: 180 }} value={interest} onChange={(e) => setInterest(e.target.value as Interest | 'All')}>
+          <select
+            id="cust-int"
+            className={styles.inline}
+            style={{ maxWidth: 180 }}
+            value={interest}
+            onChange={(e) => setInterest(e.target.value as Interest | 'All')}
+          >
             <option value="All">All interests</option>
             {INTERESTS.map((i) => (
               <option key={i}>{i}</option>
@@ -72,7 +104,13 @@ export function CustomersPage() {
           <label className="sr-only" htmlFor="cust-consent">
             Marketing consent
           </label>
-          <select id="cust-consent" className={styles.inline} style={{ maxWidth: 220 }} value={consent} onChange={(e) => setConsent(e.target.value as 'all' | 'yes' | 'no')}>
+          <select
+            id="cust-consent"
+            className={styles.inline}
+            style={{ maxWidth: 220 }}
+            value={consent}
+            onChange={(e) => setConsent(e.target.value as 'all' | 'yes' | 'no')}
+          >
             <option value="all">Any consent status</option>
             <option value="yes">Opted in to news</option>
             <option value="no">Not opted in</option>
@@ -101,8 +139,16 @@ export function CustomersPage() {
                     </td>
                     <td>{c.interests.length ? c.interests.join(', ') : '—'}</td>
                     <td>
-                      {c.marketingConsent ? <Badge tone="ok">Opted in</Badge> : <Badge tone="muted">Not opted in</Badge>}
-                      <small>{c.marketingConsent && c.consentAt ? `${when(c.consentAt)} · ${c.consentSource}` : 'Transactional emails only'}</small>
+                      {c.marketingConsent ? (
+                        <Badge tone="ok">Opted in</Badge>
+                      ) : (
+                        <Badge tone="muted">Not opted in</Badge>
+                      )}
+                      <small>
+                        {c.marketingConsent && c.consentAt
+                          ? `${when(c.consentAt)} · ${c.consentSource}`
+                          : 'Transactional emails only'}
+                      </small>
                     </td>
                   </tr>
                 ))}
@@ -110,7 +156,11 @@ export function CustomersPage() {
             </table>
           </div>
         )}
-        {!isOwner && <p className={styles.note} style={{ marginTop: 10 }}>Staff can look people up but cannot export the list.</p>}
+        {!isOwner && (
+          <p className={styles.note} style={{ marginTop: 10 }}>
+            Staff can look people up but cannot export the list.
+          </p>
+        )}
       </Panel>
     </>
   );

@@ -8,9 +8,13 @@ export default function NotFound() {
     <>
       <main id="main" tabIndex={-1}>
         <PageHero kicker="Critical miss" title="Page not found">
-          You rolled a natural 1. That page isn&apos;t here. Try the stock checker, or call us on {STORE.phone}.
+          You rolled a natural 1. That page isn&apos;t here. Try the stock checker, or call us on{' '}
+          {STORE.phone}.
         </PageHero>
-        <div className="wrap" style={{ paddingBlock: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+        <div
+          className="wrap"
+          style={{ paddingBlock: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}
+        >
           <ButtonLink href="/">Back to the shop</ButtonLink>
           <ButtonLink href="/stock" variant="blue">
             Check stock

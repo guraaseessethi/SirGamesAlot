@@ -18,10 +18,24 @@ export interface PhotoSlotProps {
  */
 export function PhotoSlot({ src, alt, label, width, height }: PhotoSlotProps) {
   if (src) {
-    return <Image className={styles.img} src={src} alt={alt} width={width} height={height} sizes="(max-width: 860px) 100vw, 560px" />;
+    return (
+      <Image
+        className={styles.img}
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        sizes="(max-width: 860px) 100vw, 560px"
+      />
+    );
   }
   return (
-    <div className={styles.slot} style={{ aspectRatio: `${width} / ${height}` }} role="img" aria-label={`Photo placeholder: ${label}`}>
+    <div
+      className={styles.slot}
+      style={{ aspectRatio: `${width} / ${height}` }}
+      role="img"
+      aria-label={`Photo placeholder: ${label}`}
+    >
       <span className={styles.tag}>Photo slot</span>
       <span className={styles.label}>{label}</span>
       <span className={styles.size}>

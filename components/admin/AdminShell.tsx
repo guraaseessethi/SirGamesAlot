@@ -47,7 +47,7 @@ function Frame({ children }: { children: ReactNode }) {
       </div>
       <header className={styles.top}>
         <div className={`wrap ${styles.topInner}`}>
-          <Link href="/admin/today" className={styles.brand} aria-label="Sir Games-A-Lot back office, today">
+          <Link href="/admin/today" className={styles.brand}>
             <SignText />
             <small>Back office</small>
           </Link>
@@ -78,7 +78,11 @@ function Frame({ children }: { children: ReactNode }) {
         <nav className={styles.nav} aria-label="Back office">
           <div className={`wrap ${styles.navInner}`}>
             {NAV.filter((n) => !n.ownerOnly || role === 'owner').map((n) => (
-              <Link key={n.href} href={n.href} aria-current={pathname === n.href ? 'page' : undefined}>
+              <Link
+                key={n.href}
+                href={n.href}
+                aria-current={pathname === n.href ? 'page' : undefined}
+              >
                 {n.label}
               </Link>
             ))}
@@ -96,20 +100,34 @@ function RolePicker() {
   const { setRole } = useRole();
   return (
     <section aria-labelledby="pick-title">
-      <h1 id="pick-title" style={{ fontFamily: 'var(--display)', fontWeight: 400, textTransform: 'uppercase', fontSize: 34, marginBottom: 8 }}>
+      <h1
+        id="pick-title"
+        style={{
+          fontFamily: 'var(--display)',
+          fontWeight: 400,
+          textTransform: 'uppercase',
+          fontSize: 34,
+          marginBottom: 8,
+        }}
+      >
         Who&apos;s at the counter?
       </h1>
       <p className={styles.note} style={{ marginBottom: 16, fontSize: 15 }}>
-        Demo. Real staff login comes in the full build. Pick a role to see what each person would be allowed to do.
+        Demo. Real staff login comes in the full build. Pick a role to see what each person would be
+        allowed to do.
       </p>
       <div className={styles.picker}>
         <button type="button" className={styles.pickCard} onClick={() => setRole('owner')}>
           <b>Owner</b>
-          <span>Everything: settings, hours, the construction banner, exports and customer data.</span>
+          <span>
+            Everything: settings, hours, the construction banner, exports and customer data.
+          </span>
         </button>
         <button type="button" className={styles.pickCard} onClick={() => setRole('staff')}>
           <b>Staff</b>
-          <span>Holds, special orders, event check-in and stock overrides. No exports, no settings.</span>
+          <span>
+            Holds, special orders, event check-in and stock overrides. No exports, no settings.
+          </span>
         </button>
       </div>
     </section>

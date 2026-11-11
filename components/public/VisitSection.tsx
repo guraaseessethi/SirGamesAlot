@@ -14,7 +14,8 @@ export function VisitSection({ settings, nowIso }: { settings: Settings; nowIso:
         <h3>Find us</h3>
         <p className={styles.addr}>{STORE.fullAddress}</p>
         <p className={styles.contact}>
-          <a href={STORE.phoneHref}>{STORE.phone}</a> · <a href={`mailto:${STORE.email}`}>{STORE.email}</a>
+          <a href={STORE.phoneHref}>{STORE.phone}</a> ·{' '}
+          <a href={`mailto:${STORE.email}`}>{STORE.email}</a>
         </p>
         <EntranceMap />
         <div className={styles.social}>

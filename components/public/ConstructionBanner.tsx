@@ -14,7 +14,8 @@ export function ConstructionBanner({ initial }: { initial: BannerSettings }) {
     <div className={styles.alert} role="status" data-testid="construction-banner">
       <div className={`wrap ${styles.alertInner}`}>
         <span>
-          <b>{banner.headline}</b> {banner.body} <Verify note="construction notice and entrance directions" />
+          <b>{banner.headline}</b> {banner.body}{' '}
+          <Verify note="construction notice and entrance directions" />
         </span>
         <Link href={banner.linkHref}>{banner.linkLabel}</Link>
       </div>

@@ -10,10 +10,14 @@ export function OutboxPage() {
   if (!outbox) return <p>Loading…</p>;
   return (
     <>
-      <PageTitle title="Demo outbox">Every email the full build would send. Nothing is actually sent in this demo.</PageTitle>
+      <PageTitle title="Demo outbox">
+        Every email the full build would send. Nothing is actually sent in this demo.
+      </PageTitle>
       <Panel id="outbox" title={`Messages (${outbox.length})`}>
         {outbox.length === 0 ? (
-          <Empty>Nothing yet. Place a hold with an email address, save an event seat, or notify someone.</Empty>
+          <Empty>
+            Nothing yet. Place a hold with an email address, save an event seat, or notify someone.
+          </Empty>
         ) : (
           <div className={styles.tableWrap}>
             <table className={styles.table}>

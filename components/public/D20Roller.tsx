@@ -8,7 +8,10 @@ import { rollAnnouncement, rollD20, rollMessage } from '@/lib/d20';
 import styles from './D20Roller.module.css';
 
 export function D20Roller({ initialPromoEnabled }: { initialPromoEnabled: boolean }) {
-  const promo = useRepoData(async (r) => (await r.getSettings()).d20PromoEnabled, initialPromoEnabled);
+  const promo = useRepoData(
+    async (r) => (await r.getSettings()).d20PromoEnabled,
+    initialPromoEnabled,
+  );
   const [result, setResult] = useState<number | null>(null);
   const [rolling, setRolling] = useState(0);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -33,14 +36,17 @@ export function D20Roller({ initialPromoEnabled }: { initialPromoEnabled: boolea
 
   return (
     <div className={styles.rollbox}>
-      <button className={styles.die} type="button" onClick={roll} aria-label="Roll the twenty-sided die" data-testid="die">
-        <span key={rolling} className={rolling > 0 ? styles.spin : ''}>
+      <button className={styles.die} type="button" onClick={roll} data-testid="die">
+        <span className="sr-only">Roll the twenty-sided die</span>
+        <span key={rolling} className={`${styles.face} ${rolling > 0 ? styles.spin : ''}`}>
           <D20 number={result ?? 20} />
         </span>
       </button>
       <div>
         <div className="kick">The Sir Games-A-Lot tradition</div>
-        <h2 className={styles.h2}>{promo ? 'Take 10% off, or roll for it.' : 'The d20 is resting.'}</h2>
+        <h2 className={styles.h2}>
+          {promo ? 'Take 10% off, or roll for it.' : 'The d20 is resting.'}
+        </h2>
         <div className={styles.res}>
           <div className={styles.top2}>
             <span className={styles.tap}>{result === null ? 'Tap the die' : 'You rolled'}</span>
@@ -57,7 +63,8 @@ export function D20Roller({ initialPromoEnabled }: { initialPromoEnabled: boolea
                   : "The take-10%-or-roll discount isn't running right now, but the die still rolls."}
             </p>
             <p className={styles.note}>
-              Just for fun here. The real roll happens at the counter on event days. <Verify note="is the d20 discount still running, and what are the exact rules?" />
+              Just for fun here. The real roll happens at the counter on event days.{' '}
+              <Verify note="is the d20 discount still running, and what are the exact rules?" />
             </p>
           </div>
         </div>

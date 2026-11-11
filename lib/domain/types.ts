@@ -208,7 +208,13 @@ export interface Settings {
 
 export interface OutboxMessage {
   id: string;
-  kind: 'hold-confirmation' | 'back-in-stock' | 'order-arrived' | 'event-confirmation' | 'event-promoted' | 'other';
+  kind:
+    | 'hold-confirmation'
+    | 'back-in-stock'
+    | 'order-arrived'
+    | 'event-confirmation'
+    | 'event-promoted'
+    | 'other';
   to: string;
   subject: string;
   body: string;

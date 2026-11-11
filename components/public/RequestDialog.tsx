@@ -11,10 +11,9 @@ import { RepositoryError } from '@/lib/data/repository';
 import { interestForCategory } from '@/lib/domain/interests';
 import type { Product } from '@/lib/domain/types';
 import { STORE_TZ } from '@/lib/hours/hours';
+import type { RequestMode } from './requestLabels';
 import { ContactFields, EMPTY_CONTACT, focusFirstError, type ContactValues } from './ContactFields';
 import styles from './Forms.module.css';
-
-export type RequestMode = 'hold' | 'order' | 'notify';
 
 const TITLES: Record<RequestMode, string> = {
   hold: 'Hold it for me',
@@ -28,16 +27,6 @@ const SUBMIT: Record<RequestMode, string> = {
   notify: 'Tell me',
 };
 
-export function requestDoneLabel(mode: RequestMode, holdHours: number): string {
-  if (mode === 'hold') return `Held ${holdHours} h ✓`;
-  if (mode === 'order') return 'Requested ✓';
-  return "We'll tell you ✓";
-}
-
-export function requestIdleLabel(mode: RequestMode): string {
-  return mode === 'hold' ? 'Hold it' : mode === 'order' ? 'Order it in' : "Tell me when it's back";
-}
-
 export function RequestDialog({
   mode,
   product,
@@ -50,8 +39,14 @@ export function RequestDialog({
   onDone: (mode: RequestMode, product: Product) => void;
 }) {
   return (
-    <Dialog open={mode !== null && product !== null} onClose={onClose} title={mode ? TITLES[mode] : ''}>
-      {mode && product && <RequestForm mode={mode} product={product} onClose={onClose} onDone={onDone} />}
+    <Dialog
+      open={mode !== null && product !== null}
+      onClose={onClose}
+      title={mode ? TITLES[mode] : ''}
+    >
+      {mode && product && (
+        <RequestForm mode={mode} product={product} onClose={onClose} onDone={onDone} />
+      )}
     </Dialog>
   );
 }
@@ -90,11 +85,20 @@ function RequestForm({
     try {
       let message: string;
       if (mode === 'hold') {
-        const hold = await repo.createHold({ ...base, sku: product.sku, productName: product.name });
+        const hold = await repo.createHold({
+          ...base,
+          sku: product.sku,
+          productName: product.name,
+        });
         const until = formatInTimeZone(new Date(hold.expiresAt), STORE_TZ, "EEEE 'at' h:mm a");
         message = `Done. We'll set ${product.name} aside at the counter until ${until}. Give your name when you pick it up. No payment needed online.`;
       } else if (mode === 'order') {
-        await repo.createSpecialOrder({ ...base, sku: product.sku, productName: product.name, note });
+        await repo.createSpecialOrder({
+          ...base,
+          sku: product.sku,
+          productName: product.name,
+          note,
+        });
         message = `Order request sent for ${product.name}. We'll call or email with the arrival date, usually about a week. No payment needed online.`;
       } else {
         await repo.createBackInStock({ ...base, sku: product.sku, productName: product.name });
@@ -120,7 +124,11 @@ function RequestForm({
       <div className={styles.success}>
         <h3>You&apos;re all set</h3>
         <p>{done.message}</p>
-        {done.hasEmail && <p className={styles.demo}>A confirmation email would be sent in the full build. This is a demo.</p>}
+        {done.hasEmail && (
+          <p className={styles.demo}>
+            A confirmation email would be sent in the full build. This is a demo.
+          </p>
+        )}
         <div className={styles.actions}>
           <Button variant="blue" onClick={onClose}>
             Close
@@ -135,7 +143,13 @@ function RequestForm({
       <p className={styles.summary}>{product.name}</p>
       <ContactFields idPrefix={prefix} values={values} errors={errors} onChange={setValues} />
       {mode === 'order' && (
-        <TextAreaField id={`${prefix}-note`} label="Anything we should know? (optional)" value={note} error={errors.note} onChange={(e) => setNote(e.target.value)} />
+        <TextAreaField
+          id={`${prefix}-note`}
+          label="Anything we should know? (optional)"
+          value={note}
+          error={errors.note}
+          onChange={(e) => setNote(e.target.value)}
+        />
       )}
       {errors.form && (
         <p className={styles.error} role="alert">

@@ -10,7 +10,8 @@ import { getRepository } from '@/lib/data';
 
 export const metadata: Metadata = {
   title: 'Hours and directions',
-  description: 'Sir Games-A-Lot is on the lower level of the Bayfield Mall, 320 Bayfield Street, Barrie, next to Bowlerama and Service Ontario. Hours, phone and entrance directions.',
+  description:
+    'Sir Games-A-Lot is on the lower level of the Bayfield Mall, 320 Bayfield Street, Barrie, next to Bowlerama and Service Ontario. Hours, phone and entrance directions.',
   alternates: { canonical: '/visit' },
 };
 
@@ -20,7 +21,8 @@ export default async function VisitPage() {
     <>
       <JsonLd data={storeJsonLd(settings)} />
       <PageHero kicker="Visit" title="Lower level, Bayfield Mall">
-        Near Bowlerama and Service Ontario. Main doors are closed for construction, so use the Coulter Street side.
+        Near Bowlerama and Service Ontario. Main doors are closed for construction, so use the
+        Coulter Street side.
       </PageHero>
       <div className={`wrap ${sections.pageBody}`}>
         <VisitSection settings={settings} nowIso={new Date().toISOString()} />
@@ -28,10 +30,30 @@ export default async function VisitPage() {
           Inside the shop
         </h2>
         <div className={visit.photos}>
-          <PhotoSlot label="Storefront and sign" alt="The Sir Games-A-Lot storefront" width={1200} height={800} />
-          <PhotoSlot label="Statues at the door" alt="Life-size statues at the entrance" width={1200} height={800} />
-          <PhotoSlot label="The Citadel paint wall" alt="The wall of miniature paints" width={1200} height={800} />
-          <PhotoSlot label="The playspace tables" alt="Playspace tables in the store" width={1200} height={800} />
+          <PhotoSlot
+            label="Storefront and sign"
+            alt="The Sir Games-A-Lot storefront"
+            width={1200}
+            height={800}
+          />
+          <PhotoSlot
+            label="Statues at the door"
+            alt="Life-size statues at the entrance"
+            width={1200}
+            height={800}
+          />
+          <PhotoSlot
+            label="The Citadel paint wall"
+            alt="The wall of miniature paints"
+            width={1200}
+            height={800}
+          />
+          <PhotoSlot
+            label="The playspace tables"
+            alt="Playspace tables in the store"
+            width={1200}
+            height={800}
+          />
         </div>
       </div>
     </>

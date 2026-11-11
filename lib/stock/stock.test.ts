@@ -63,7 +63,9 @@ describe('filterProducts', () => {
   const base = { q: '', category: 'All', sort: 'name' } as const;
 
   it('finds by name, ignoring case', () => {
-    expect(filterProducts(all, { ...base, q: 'leadbelcher' }).map((p) => p.sku)).toEqual(['PT-LEADBELCHER']);
+    expect(filterProducts(all, { ...base, q: 'leadbelcher' }).map((p) => p.sku)).toEqual([
+      'PT-LEADBELCHER',
+    ]);
   });
   it('needs every word to match', () => {
     expect(filterProducts(all, { ...base, q: 'citadel base' }).length).toBe(3);

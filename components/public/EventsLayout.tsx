@@ -23,7 +23,12 @@ export function EventsLayout({
         <AnniversaryFlyer initialLabel={anniversaryLabel} />
         <EventHistory initialEvents={events} initialNowIso={nowIso} />
       </div>
-      <EventsExplorer initialEvents={events} initialSignups={signups} initialNowIso={nowIso} limit={limit} />
+      <EventsExplorer
+        initialEvents={events}
+        initialSignups={signups}
+        initialNowIso={nowIso}
+        limit={limit}
+      />
     </div>
   );
 }

@@ -45,15 +45,23 @@ function SignupForm({
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ outcome: 'seated' | 'waitlist'; message: string } | null>(null);
+  const [result, setResult] = useState<{ outcome: 'seated' | 'waitlist'; message: string } | null>(
+    null,
+  );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setErrors({});
     try {
-      const { outcome } = await getRepository().createSignup({ eventId: event.id, name, email, marketingConsent: consent });
-      const fee = event.feeCents > 0 ? ` Fee ${formatFee(event.feeCents)}, paid at the counter.` : '';
+      const { outcome } = await getRepository().createSignup({
+        eventId: event.id,
+        name,
+        email,
+        marketingConsent: consent,
+      });
+      const fee =
+        event.feeCents > 0 ? ` Fee ${formatFee(event.feeCents)}, paid at the counter.` : '';
       const message =
         outcome === 'seated'
           ? `You're in! Your seat for ${event.title} is saved.${fee}`
@@ -79,7 +87,9 @@ function SignupForm({
       <div className={styles.success}>
         <h3>{result.outcome === 'seated' ? "You're in" : 'On the waitlist'}</h3>
         <p>{result.message}</p>
-        <p className={styles.demo}>A confirmation email would be sent in the full build. This is a demo.</p>
+        <p className={styles.demo}>
+          A confirmation email would be sent in the full build. This is a demo.
+        </p>
         <div className={styles.actions}>
           <Button variant="blue" onClick={onClose}>
             Close
@@ -94,9 +104,18 @@ function SignupForm({
       <p className={styles.summary}>
         {event.title}
         <br />
-        {formatEventDate(event, 'EEE, MMM d')} · {event.feeCents > 0 ? `${formatFee(event.feeCents)}, pay at the counter` : 'Free'}
+        {formatEventDate(event, 'EEE, MMM d')} ·{' '}
+        {event.feeCents > 0 ? `${formatFee(event.feeCents)}, pay at the counter` : 'Free'}
       </p>
-      <TextField id={`${prefix}-name`} label="Your name" autoComplete="name" value={name} error={errors.name} onChange={(e) => setName(e.target.value)} required />
+      <TextField
+        id={`${prefix}-name`}
+        label="Your name"
+        autoComplete="name"
+        value={name}
+        error={errors.name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
       <TextField
         id={`${prefix}-email`}
         label="Email"

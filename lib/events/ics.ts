@@ -3,7 +3,10 @@ import type { StoreEvent } from '@/lib/domain/types';
 import { formatFee } from '@/lib/money';
 
 function utcStamp(iso: string): string {
-  return new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 }
 
 function escapeText(s: string): string {
@@ -21,7 +24,9 @@ function fold(line: string): string {
 export function buildIcs(event: StoreEvent, now: Date = new Date()): string {
   const description = [
     event.description || event.note,
-    event.feeCents > 0 ? `Fee: ${formatFee(event.feeCents)}, paid at the counter.` : 'Free to attend.',
+    event.feeCents > 0
+      ? `Fee: ${formatFee(event.feeCents)}, paid at the counter.`
+      : 'Free to attend.',
     `Questions? Call ${STORE.phone}.`,
   ]
     .filter(Boolean)

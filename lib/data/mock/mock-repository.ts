@@ -142,7 +142,9 @@ export class MockRepository implements DataRepository {
       if (e.seriesId) firstOfSeries.add(e.seriesId);
       // The first D&D one-shot is full, so the waitlist flow is visible in the demo.
       const full = isFirstOfSeries && e.seriesId === 'ser-dnd';
-      const taken = full ? e.capacity : Math.min(e.capacity - 1, Math.round(e.capacity * (0.25 + 0.65 * hash01(e.id))));
+      const taken = full
+        ? e.capacity
+        : Math.min(e.capacity - 1, Math.round(e.capacity * (0.25 + 0.65 * hash01(e.id))));
       for (let i = 0; i < taken; i += 1) {
         s.signups.push({
           id: this.id('sup'),
@@ -167,7 +169,9 @@ export class MockRepository implements DataRepository {
     const email = who.email?.trim().toLowerCase() || undefined;
     const phone = who.phone?.trim() ? digits(who.phone) : undefined;
     const existing = s.customers.find(
-      (c) => (email && c.email?.toLowerCase() === email) || (phone && c.phone && digits(c.phone) === phone),
+      (c) =>
+        (email && c.email?.toLowerCase() === email) ||
+        (phone && c.phone && digits(c.phone) === phone),
     );
     const nowIso = this.now().toISOString();
     if (existing) {
@@ -195,7 +199,11 @@ export class MockRepository implements DataRepository {
   private parse<T extends z.ZodType>(schema: T, input: unknown): z.output<T> {
     const result = schema.safeParse(input);
     if (!result.success) {
-      throw new RepositoryError('validation', 'Please check the highlighted fields.', fieldErrors(result.error));
+      throw new RepositoryError(
+        'validation',
+        'Please check the highlighted fields.',
+        fieldErrors(result.error),
+      );
     }
     return result.data;
   }
@@ -239,7 +247,9 @@ export class MockRepository implements DataRepository {
   async listHolds(): Promise<Hold[]> {
     const now = this.now().toISOString();
     return structuredClone(this.load().holds)
-      .map((h) => (h.status === 'active' && h.expiresAt < now ? { ...h, status: 'expired' as const } : h))
+      .map((h) =>
+        h.status === 'active' && h.expiresAt < now ? { ...h, status: 'expired' as const } : h,
+      )
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
@@ -283,7 +293,9 @@ export class MockRepository implements DataRepository {
   // ---------- special orders ----------
 
   async listSpecialOrders(): Promise<SpecialOrder[]> {
-    return structuredClone(this.load().orders).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return structuredClone(this.load().orders).sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt),
+    );
   }
 
   async createSpecialOrder(input: OrderInput): Promise<SpecialOrder> {
@@ -325,7 +337,9 @@ export class MockRepository implements DataRepository {
   // ---------- back in stock ----------
 
   async listBackInStock(): Promise<BackInStockRequest[]> {
-    return structuredClone(this.load().backInStock).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return structuredClone(this.load().backInStock).sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt),
+    );
   }
 
   async createBackInStock(input: BackInStockCreate): Promise<BackInStockRequest> {
@@ -401,7 +415,11 @@ export class MockRepository implements DataRepository {
         date: data.schedule.date,
       });
     } else {
-      s.series.push({ ...this.fieldsFrom(data), id: this.id('ser'), rule: data.schedule.rule as EventSeries['rule'] });
+      s.series.push({
+        ...this.fieldsFrom(data),
+        id: this.id('ser'),
+        rule: data.schedule.rule as EventSeries['rule'],
+      });
     }
     this.ensureSeedSignups(s);
     this.commit();
@@ -414,16 +432,24 @@ export class MockRepository implements DataRepository {
     const series = s.series.find((x) => x.id === seriesId);
     if (series) {
       if (data.schedule.mode !== 'recurring') {
-        throw new RepositoryError('conflict', 'A recurring event stays recurring. Create a one-off event instead.');
+        throw new RepositoryError(
+          'conflict',
+          'A recurring event stays recurring. Create a one-off event instead.',
+        );
       }
-      Object.assign(series, this.fieldsFrom(data), { rule: data.schedule.rule as EventSeries['rule'] });
+      Object.assign(series, this.fieldsFrom(data), {
+        rule: data.schedule.rule as EventSeries['rule'],
+      });
       this.commit();
       return;
     }
     const one = s.oneOffs.find((x) => x.id === eventId);
     if (!one) throw new RepositoryError('not-found', 'Event not found.');
     if (data.schedule.mode !== 'one-off') {
-      throw new RepositoryError('conflict', 'A one-off event stays one-off. Create a recurring event instead.');
+      throw new RepositoryError(
+        'conflict',
+        'A one-off event stays one-off. Create a recurring event instead.',
+      );
     }
     Object.assign(one, this.fieldsFrom(data), {
       date: data.schedule.date,
@@ -437,7 +463,9 @@ export class MockRepository implements DataRepository {
     const seriesId = eventId.includes('__') ? eventId.split('__')[0] : eventId;
     s.series = s.series.filter((x) => x.id !== seriesId);
     s.oneOffs = s.oneOffs.filter((x) => x.id !== eventId);
-    s.signups = s.signups.filter((x) => x.eventId !== eventId && !x.eventId.startsWith(`${seriesId}__`));
+    s.signups = s.signups.filter(
+      (x) => x.eventId !== eventId && !x.eventId.startsWith(`${seriesId}__`),
+    );
     this.commit();
   }
 
@@ -455,14 +483,20 @@ export class MockRepository implements DataRepository {
     const s = this.load();
     const event = this.allEvents(s).find((e) => e.id === data.eventId);
     if (!event) throw new RepositoryError('not-found', 'We could not find that event.');
-    if (event.capacity <= 0) throw new RepositoryError('conflict', 'This event is open to everyone. No seat needed.');
-    if (event.endsAt <= this.now().toISOString()) throw new RepositoryError('conflict', 'That event has already happened.');
+    if (event.capacity <= 0)
+      throw new RepositoryError('conflict', 'This event is open to everyone. No seat needed.');
+    if (event.endsAt <= this.now().toISOString())
+      throw new RepositoryError('conflict', 'That event has already happened.');
     const forEvent = s.signups.filter((x) => x.eventId === event.id);
     const decision = decideSignup(event.capacity, forEvent, data.email);
     if (decision === 'duplicate') {
-      throw new RepositoryError('duplicate', 'That email already has a seat or a spot on the waitlist.', {
-        email: 'That email already has a seat or a spot on the waitlist.',
-      });
+      throw new RepositoryError(
+        'duplicate',
+        'That email already has a seat or a spot on the waitlist.',
+        {
+          email: 'That email already has a seat or a spot on the waitlist.',
+        },
+      );
     }
     const signup: EventSignup = {
       id: this.id('sup'),
@@ -474,11 +508,19 @@ export class MockRepository implements DataRepository {
       marketingConsent: data.marketingConsent,
     };
     s.signups.push(signup);
-    this.upsertCustomer(s, { name: data.name, email: data.email, marketingConsent: data.marketingConsent }, 'website event sign-up', interestForEvent(event.type));
+    this.upsertCustomer(
+      s,
+      { name: data.name, email: data.email, marketingConsent: data.marketingConsent },
+      'website event sign-up',
+      interestForEvent(event.type),
+    );
     this.pushOutbox(s, {
       kind: 'event-confirmation',
       to: data.email,
-      subject: decision === 'seated' ? `You're in: ${event.title}` : `You're on the waitlist: ${event.title}`,
+      subject:
+        decision === 'seated'
+          ? `You're in: ${event.title}`
+          : `You're on the waitlist: ${event.title}`,
       body:
         decision === 'seated'
           ? `Hi ${data.name}, your seat is saved for ${event.title}. Fee ${formatFee(event.feeCents)}, paid at the counter.`
@@ -500,11 +542,15 @@ export class MockRepository implements DataRepository {
     const s = this.load();
     const signup = s.signups.find((x) => x.id === id);
     if (!signup) throw new RepositoryError('not-found', 'Sign-up not found.');
-    if (signup.status !== 'waitlist') throw new RepositoryError('conflict', 'Only someone on the waitlist can be promoted.');
+    if (signup.status !== 'waitlist')
+      throw new RepositoryError('conflict', 'Only someone on the waitlist can be promoted.');
     const event = this.allEvents(s).find((e) => e.id === signup.eventId);
     const forEvent = s.signups.filter((x) => x.eventId === signup.eventId);
     if (!event || !canPromote(event.capacity, forEvent)) {
-      throw new RepositoryError('conflict', 'No open seat. Mark someone as cancelled or no-show first.');
+      throw new RepositoryError(
+        'conflict',
+        'No open seat. Mark someone as cancelled or no-show first.',
+      );
     }
     signup.status = 'seated';
     this.pushOutbox(s, {
@@ -524,13 +570,19 @@ export class MockRepository implements DataRepository {
   // ---------- customers ----------
 
   async listCustomers(): Promise<Customer[]> {
-    return structuredClone(this.load().customers).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return structuredClone(this.load().customers).sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt),
+    );
   }
 
   // ---------- outbox ----------
 
   private pushOutbox(s: DemoState, msg: Omit<OutboxMessage, 'id' | 'createdAt'>): OutboxMessage {
-    const message: OutboxMessage = { ...msg, id: this.id('out'), createdAt: this.now().toISOString() };
+    const message: OutboxMessage = {
+      ...msg,
+      id: this.id('out'),
+      createdAt: this.now().toISOString(),
+    };
     s.outbox.unshift(message);
     return message;
   }

@@ -46,7 +46,9 @@ export function toProduct(item: InventoryItem, override?: ProductOverride): Prod
     statusOverridden: override?.status !== undefined,
     overridden:
       override?.status !== undefined ||
-      (override?.shelf !== undefined && override.shelf.trim() !== '' && override.shelf.trim() !== item.shelf) ||
+      (override?.shelf !== undefined &&
+        override.shelf.trim() !== '' &&
+        override.shelf.trim() !== item.shelf) ||
       override?.lowThreshold !== undefined,
   };
 }

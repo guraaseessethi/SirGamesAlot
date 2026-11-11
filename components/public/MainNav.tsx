@@ -17,7 +17,8 @@ export function MainNav() {
   return (
     <nav className={styles.nav} aria-label="Main">
       {LINKS.map((l) => {
-        const current = !l.href.includes('#') && (pathname === l.href || pathname.startsWith(`${l.href}/`));
+        const current =
+          !l.href.includes('#') && (pathname === l.href || pathname.startsWith(`${l.href}/`));
         return (
           <Link key={l.href} href={l.href} aria-current={current ? 'page' : undefined}>
             {l.label}

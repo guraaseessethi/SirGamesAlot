@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { buildSeed } from '@/lib/data/mock/seed';
-import { lastWeekdayOfMonth, nthWeekdayOfMonth, occurrencesBetween, describeRule } from './recurrence';
+import {
+  lastWeekdayOfMonth,
+  nthWeekdayOfMonth,
+  occurrencesBetween,
+  describeRule,
+} from './recurrence';
 import { buildEventList, isUpcoming, splitEvents, toInstant } from './events';
 import { buildIcs } from './ics';
 
@@ -34,18 +39,23 @@ describe('recurrence rules', () => {
     expect(
       occurrencesBetween({ kind: 'last-weekday', weekday: 4 }, '2026-12-01', '2027-02-28'),
     ).toEqual(['2026-12-31', '2027-01-28', '2027-02-25']);
-    expect(occurrencesBetween({ kind: 'nth-weekday', weekday: 6, nth: 3 }, '2026-11-22', '2027-01-31')).toEqual([
-      '2026-12-19',
-      '2027-01-16',
-    ]);
+    expect(
+      occurrencesBetween({ kind: 'nth-weekday', weekday: 6, nth: 3 }, '2026-11-22', '2027-01-31'),
+    ).toEqual(['2026-12-19', '2027-01-16']);
   });
   it('does not return dates outside the range', () => {
-    expect(occurrencesBetween({ kind: 'nth-weekday', weekday: 6, nth: 3 }, '2026-11-22', '2026-12-18')).toEqual([]);
-    expect(occurrencesBetween({ kind: 'weekly', weekday: 1 }, '2026-12-01', '2026-11-01')).toEqual([]);
+    expect(
+      occurrencesBetween({ kind: 'nth-weekday', weekday: 6, nth: 3 }, '2026-11-22', '2026-12-18'),
+    ).toEqual([]);
+    expect(occurrencesBetween({ kind: 'weekly', weekday: 1 }, '2026-12-01', '2026-11-01')).toEqual(
+      [],
+    );
   });
   it('describes rules in plain words', () => {
     expect(describeRule({ kind: 'weekly', weekday: 5 })).toBe('Every Friday');
-    expect(describeRule({ kind: 'nth-weekday', weekday: 6, nth: 3 })).toBe('3rd Saturday of the month');
+    expect(describeRule({ kind: 'nth-weekday', weekday: 6, nth: 3 })).toBe(
+      '3rd Saturday of the month',
+    );
     expect(describeRule({ kind: 'last-weekday', weekday: 4 })).toBe('Last Thursday of the month');
   });
 });
@@ -108,7 +118,9 @@ describe('event list and history', () => {
 
 describe('calendar download', () => {
   it('builds a valid .ics with UTC times and CRLF line endings', () => {
-    const e = buildEventList({ oneOffs: buildSeed(NOW).oneOffs, series: [] }, NOW).find((x) => x.id === 'evt-holiday')!;
+    const e = buildEventList({ oneOffs: buildSeed(NOW).oneOffs, series: [] }, NOW).find(
+      (x) => x.id === 'evt-holiday',
+    )!;
     const ics = buildIcs(e, NOW);
     expect(ics.startsWith('BEGIN:VCALENDAR\r\n')).toBe(true);
     expect(ics).toContain('DTSTART:20261121T150000Z');

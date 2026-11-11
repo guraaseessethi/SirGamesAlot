@@ -37,7 +37,10 @@ export default async function HomePage() {
               <div className="kick">What&apos;s on the shelves</div>
               <h2 id="aisles-title">Pick your aisle</h2>
             </div>
-            <p>Come in for one game, leave with a new hobby. The staff actually play this stuff, so ask.</p>
+            <p>
+              Come in for one game, leave with a new hobby. The staff actually play this stuff, so
+              ask.
+            </p>
           </div>
           <Aisles />
         </div>
@@ -50,9 +53,17 @@ export default async function HomePage() {
               <div className="kick">Stock checker</div>
               <h2 id="stock-title">Got it? Check before you drive.</h2>
             </div>
-            <p>Search a paint, codex, book or booster. Hold it at the counter, or ask us to order it in.</p>
+            <p>
+              Search a paint, codex, book or booster. Hold it at the counter, or ask us to order it
+              in.
+            </p>
           </div>
-          <StockChecker initialProducts={products} initialSettings={settings} idPrefix="home-stock" />
+          <StockChecker
+            initialProducts={products}
+            initialSettings={settings}
+            idPrefix="home-stock"
+            previewCount={6}
+          />
         </div>
       </section>
 
@@ -63,9 +74,18 @@ export default async function HomePage() {
               <div className="kick">Events</div>
               <h2 id="events-title">Sales, cosplay &amp; game days</h2>
             </div>
-            <p>Every event is on one calendar now, with times, costs and seats, instead of buried in comments.</p>
+            <p>
+              Every event is on one calendar now, with times, costs and seats, instead of buried in
+              comments.
+            </p>
           </div>
-          <EventsLayout events={relevantEvents} signups={signups} nowIso={nowIso} anniversaryLabel={settings.nextAnniversaryLabel} limit={8} />
+          <EventsLayout
+            events={relevantEvents}
+            signups={signups}
+            nowIso={nowIso}
+            anniversaryLabel={settings.nextAnniversaryLabel}
+            limit={5}
+          />
         </div>
       </section>
 
@@ -94,7 +114,10 @@ export default async function HomePage() {
               <div className="kick">Visit</div>
               <h2 id="visit-title">Lower level, Bayfield Mall</h2>
             </div>
-            <p>Near Bowlerama and Service Ontario. Main doors are closed for construction, so use the Coulter Street side.</p>
+            <p>
+              Near Bowlerama and Service Ontario. Main doors are closed for construction, so use the
+              Coulter Street side.
+            </p>
           </div>
           <VisitSection settings={settings} nowIso={nowIso} />
         </div>

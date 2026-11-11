@@ -56,7 +56,11 @@ export function SpecialOrderForm() {
         <div className={styles.success}>
           <h2>Request sent</h2>
           <p>{done}</p>
-          {values.email.trim() !== '' && <p className={styles.demo}>A confirmation email would be sent in the full build. This is a demo.</p>}
+          {values.email.trim() !== '' && (
+            <p className={styles.demo}>
+              A confirmation email would be sent in the full build. This is a demo.
+            </p>
+          )}
           <div className={styles.actions}>
             <Button
               variant="white"
@@ -86,7 +90,14 @@ export function SpecialOrderForm() {
         onChange={(e) => setProduct(e.target.value)}
         required
       />
-      <TextAreaField id={`${prefix}-note`} label="Anything else we should know? (optional)" hint="Edition, quantity, a date you need it by." value={note} error={errors.note} onChange={(e) => setNote(e.target.value)} />
+      <TextAreaField
+        id={`${prefix}-note`}
+        label="Anything else we should know? (optional)"
+        hint="Edition, quantity, a date you need it by."
+        value={note}
+        error={errors.note}
+        onChange={(e) => setNote(e.target.value)}
+      />
       <ContactFields idPrefix={prefix} values={values} errors={errors} onChange={setValues} />
       {errors.form && (
         <p className={styles.error} role="alert">

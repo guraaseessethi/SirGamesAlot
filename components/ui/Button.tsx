@@ -6,7 +6,9 @@ type Variant = 'yellow' | 'blue' | 'white' | 'done' | 'red';
 type Size = 'md' | 'sm';
 
 function cls(variant: Variant, size: Size, extra?: string) {
-  return [styles.btn, styles[variant], size === 'sm' ? styles.sm : '', extra ?? ''].filter(Boolean).join(' ');
+  return [styles.btn, styles[variant], size === 'sm' ? styles.sm : '', extra ?? '']
+    .filter(Boolean)
+    .join(' ');
 }
 
 interface Common {
@@ -32,7 +34,8 @@ export function ButtonLink({
   className,
   external,
   ...rest
-}: Common & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { href: string; external?: boolean }) {
+}: Common &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { href: string; external?: boolean }) {
   const isInternal = href.startsWith('/') && !external;
   if (isInternal) return <Link href={href} className={cls(variant, size, className)} {...rest} />;
   return (

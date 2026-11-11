@@ -1,20 +1,34 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { useRepoData, useNow } from '@/lib/data/hooks';
-import { EVENT_TYPES, EVENT_TYPE_LABELS, type EventSignup, type EventType, type StoreEvent } from '@/lib/domain/types';
+import { useIdlePrefetch, useRepoData, useNow } from '@/lib/data/hooks';
+import {
+  EVENT_TYPES,
+  EVENT_TYPE_LABELS,
+  type EventSignup,
+  type EventType,
+  type StoreEvent,
+} from '@/lib/domain/types';
 import { downloadIcs } from '@/lib/events/download';
 import { formatEventDate, isUpcoming } from '@/lib/events/events';
 import { seatSummary } from '@/lib/events/seats';
 import { formatTime } from '@/lib/hours/hours';
 import { formatFee } from '@/lib/money';
 import { SeatMeter } from './SeatMeter';
-import { SignupDialog } from './SignupDialog';
+
+// Loaded on demand, like the stock request form.
+const loadSignup = () => import('./SignupDialog');
+const SignupDialog = dynamic(() => loadSignup().then((m) => m.SignupDialog), { ssr: false });
 import styles from './Events.module.css';
 
-export function useEventData(initial: { events: StoreEvent[]; signups: EventSignup[]; nowIso: string }) {
+export function useEventData(initial: {
+  events: StoreEvent[];
+  signups: EventSignup[];
+  nowIso: string;
+}) {
   const events = useRepoData((r) => r.listEvents(), initial.events);
   const signups = useRepoData((r) => r.listSignups(), initial.signups);
   const now = useNow(initial.nowIso);
@@ -32,7 +46,10 @@ export function EventCard({
   onSave: (e: StoreEvent) => void;
   headingLevel?: 3 | 4;
 }) {
-  const summary = seatSummary(event.capacity, signups.filter((s) => s.eventId === event.id));
+  const summary = seatSummary(
+    event.capacity,
+    signups.filter((s) => s.eventId === event.id),
+  );
   const Heading = `h${headingLevel}` as const;
   return (
     <li className={styles.ev} data-testid="event-card">
@@ -46,7 +63,8 @@ export function EventCard({
           <Link href={`/events/${event.slug}`}>{event.title}</Link>
         </Heading>
         <div className={styles.info}>
-          {formatEventDate(event, 'EEEE, MMM d')} · {formatTime(event.startTime)} – {formatTime(event.endTime)}
+          {formatEventDate(event, 'EEEE, MMM d')} · {formatTime(event.startTime)} –{' '}
+          {formatTime(event.endTime)}
           {event.note ? ` · ${event.note}` : ''}
         </div>
         <SeatMeter summary={summary} />
@@ -54,13 +72,23 @@ export function EventCard({
       <div className={styles.act}>
         <span className={styles.fee}>{formatFee(event.feeCents)}</span>
         {summary.hasSeats ? (
-          <Button size="sm" variant="white" onClick={() => onSave(event)} aria-label={`${summary.full ? 'Join the waitlist' : 'Save a seat'}: ${event.title}, ${formatEventDate(event, 'MMM d')}`}>
+          <Button
+            size="sm"
+            variant="white"
+            onClick={() => onSave(event)}
+            aria-label={`${summary.full ? 'Join the waitlist' : 'Save a seat'}: ${event.title}, ${formatEventDate(event, 'MMM d')}`}
+          >
             {summary.full ? 'Waitlist' : 'Save a seat'}
           </Button>
         ) : (
           <span className={styles.drop}>Drop in</span>
         )}
-        <button type="button" className={styles.link} onClick={() => downloadIcs(event)} aria-label={`Add to calendar: ${event.title}, ${formatEventDate(event, 'MMM d')}`}>
+        <button
+          type="button"
+          className={styles.link}
+          onClick={() => downloadIcs(event)}
+          aria-label={`Add to calendar: ${event.title}, ${formatEventDate(event, 'MMM d')}`}
+        >
           Add to calendar
         </button>
       </div>
@@ -82,7 +110,12 @@ export function EventsExplorer({
   limit?: number;
   headingLevel?: 3 | 4;
 }) {
-  const { events, signups, now } = useEventData({ events: initialEvents, signups: initialSignups, nowIso: initialNowIso });
+  useIdlePrefetch(loadSignup);
+  const { events, signups, now } = useEventData({
+    events: initialEvents,
+    signups: initialSignups,
+    nowIso: initialNowIso,
+  });
   const [type, setType] = useState<EventType | 'all'>('all');
   const [dialog, setDialog] = useState<StoreEvent | null>(null);
 
@@ -109,19 +142,29 @@ export function EventsExplorer({
         {shown.length} upcoming {shown.length === 1 ? 'event' : 'events'}
       </p>
       {shown.length === 0 ? (
-        <p className={styles.empty}>No upcoming events of that type right now. Check back soon or call 705-719-1291.</p>
+        <p className={styles.empty}>
+          No upcoming events of that type right now. Check back soon or call 705-719-1291.
+        </p>
       ) : (
         <ul className={styles.cal}>
           {shown.map((e) => (
-            <EventCard key={e.id} event={e} signups={signups} onSave={setDialog} headingLevel={headingLevel} />
+            <EventCard
+              key={e.id}
+              event={e}
+              signups={signups}
+              onSave={setDialog}
+              headingLevel={headingLevel}
+            />
           ))}
         </ul>
       )}
       <p className={styles.fineprint}>
-        <span className="sample">Example schedule. Real dates, costs and seats come from the store.</span>
+        <span className="sample">
+          Example schedule. Real dates, costs and seats come from the store.
+        </span>
       </p>
       <p className={styles.fee2}>Fees are paid at the counter. No online payment.</p>
-      <SignupDialog event={dialog} onClose={() => setDialog(null)} />
+      {dialog && <SignupDialog event={dialog} onClose={() => setDialog(null)} />}
     </div>
   );
 }

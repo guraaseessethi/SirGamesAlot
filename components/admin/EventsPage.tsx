@@ -6,7 +6,13 @@ import { getRepository } from '@/lib/data';
 import { RepositoryError } from '@/lib/data/repository';
 import { useNow, useRepoData } from '@/lib/data/hooks';
 import type { EventFormInput } from '@/lib/domain/schemas';
-import { EVENT_TYPE_LABELS, type EventSeries, type EventSignup, type SignupStatus, type StoreEvent } from '@/lib/domain/types';
+import {
+  EVENT_TYPE_LABELS,
+  type EventSeries,
+  type EventSignup,
+  type SignupStatus,
+  type StoreEvent,
+} from '@/lib/domain/types';
 import { toCsv, downloadCsv } from '@/lib/csv';
 import { formatEventDate, isUpcoming } from '@/lib/events/events';
 import { describeRule } from '@/lib/events/recurrence';
@@ -61,7 +67,9 @@ export function EventsPage() {
   const signups = useRepoData<EventSignup[] | null>((r) => r.listSignups(), null);
   const series = useRepoData<EventSeries[] | null>((r) => r.listSeries(), null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [form, setForm] = useState<{ mode: 'new' } | { mode: 'edit'; event: StoreEvent } | null>(null);
+  const [form, setForm] = useState<{ mode: 'new' } | { mode: 'edit'; event: StoreEvent } | null>(
+    null,
+  );
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
 
@@ -69,9 +77,17 @@ export function EventsPage() {
   const selected = upcoming.find((e) => e.id === selectedId) ?? null;
   const attendees = useMemo(() => {
     if (!selected || !signups) return [];
-    const order: Record<SignupStatus, number> = { 'checked-in': 0, seated: 1, waitlist: 2, 'no-show': 3, cancelled: 4 };
+    const order: Record<SignupStatus, number> = {
+      'checked-in': 0,
+      seated: 1,
+      waitlist: 2,
+      'no-show': 3,
+      cancelled: 4,
+    };
     return signups
-      .filter((s) => s.eventId === selected.id && s.name.toLowerCase().includes(filter.toLowerCase()))
+      .filter(
+        (s) => s.eventId === selected.id && s.name.toLowerCase().includes(filter.toLowerCase()),
+      )
       .sort((a, b) => order[a.status] - order[b.status] || a.createdAt.localeCompare(b.createdAt));
   }, [signups, selected, filter]);
 
@@ -99,22 +115,54 @@ export function EventsPage() {
     if (!selected) return;
     const rows = signups!
       .filter((s) => s.eventId === selected.id)
-      .map((s) => [s.name, s.email, STATUS_LABEL[s.status], s.marketingConsent ? 'yes' : 'no', s.createdAt]);
-    downloadCsv(`${selected.slug}-attendees.csv`, toCsv(['Name', 'Email', 'Status', 'Marketing consent', 'Signed up (UTC)'], rows));
+      .map((s) => [
+        s.name,
+        s.email,
+        STATUS_LABEL[s.status],
+        s.marketingConsent ? 'yes' : 'no',
+        s.createdAt,
+      ]);
+    downloadCsv(
+      `${selected.slug}-attendees.csv`,
+      toCsv(['Name', 'Email', 'Status', 'Marketing consent', 'Signed up (UTC)'], rows),
+    );
     toast('Attendee list downloaded.');
   }
 
-  const summary = selected ? seatSummary(selected.capacity, signups.filter((s) => s.eventId === selected.id)) : null;
-  const canPromoteNow = selected && canPromote(selected.capacity, signups.filter((s) => s.eventId === selected.id));
+  const summary = selected
+    ? seatSummary(
+        selected.capacity,
+        signups.filter((s) => s.eventId === selected.id),
+      )
+    : null;
+  const canPromoteNow =
+    selected &&
+    canPromote(
+      selected.capacity,
+      signups.filter((s) => s.eventId === selected.id),
+    );
 
   return (
     <>
-      <PageTitle title="Events">Create one-off or recurring events, watch the seats fill, check people in at the door and promote from the waitlist.</PageTitle>
+      <PageTitle title="Events">
+        Create one-off or recurring events, watch the seats fill, check people in at the door and
+        promote from the waitlist.
+      </PageTitle>
 
       {form ? (
-        <Panel id="event-form" title={form.mode === 'new' ? 'New event' : `Edit ${form.event.title}`}>
+        <Panel
+          id="event-form"
+          title={form.mode === 'new' ? 'New event' : `Edit ${form.event.title}`}
+        >
           <EventForm
-            initial={form.mode === 'new' ? NEW_EVENT : valuesFor(form.event, series.find((s) => s.id === form.event.seriesId))}
+            initial={
+              form.mode === 'new'
+                ? NEW_EVENT
+                : valuesFor(
+                    form.event,
+                    series.find((s) => s.id === form.event.seriesId),
+                  )
+            }
             lockedMode={form.mode === 'edit'}
             submitLabel={form.mode === 'new' ? 'Create event' : 'Save changes'}
             onSubmit={save}
@@ -148,9 +196,16 @@ export function EventsPage() {
                 </thead>
                 <tbody>
                   {upcoming.slice(0, 40).map((e) => {
-                    const s = seatSummary(e.capacity, signups.filter((x) => x.eventId === e.id));
+                    const s = seatSummary(
+                      e.capacity,
+                      signups.filter((x) => x.eventId === e.id),
+                    );
                     return (
-                      <tr key={e.id} data-testid="admin-event-row" aria-selected={selectedId === e.id}>
+                      <tr
+                        key={e.id}
+                        data-testid="admin-event-row"
+                        aria-selected={selectedId === e.id}
+                      >
                         <td>
                           {formatEventDate(e, 'EEE MMM d')}
                           <small>
@@ -176,21 +231,39 @@ export function EventsPage() {
                         </td>
                         <td>
                           <div className={styles.actions}>
-                            <ABtn onClick={() => setSelectedId(e.id)} aria-label={`Manage sign-ups for ${e.title}, ${formatEventDate(e, 'MMM d')}`}>
+                            <ABtn
+                              onClick={() => setSelectedId(e.id)}
+                              aria-label={`Manage sign-ups for ${e.title}, ${formatEventDate(e, 'MMM d')}`}
+                            >
                               Sign-ups
                             </ABtn>
-                            <ABtn onClick={() => setForm({ mode: 'edit', event: e })} aria-label={`Edit ${e.title}`}>
+                            <ABtn
+                              onClick={() => setForm({ mode: 'edit', event: e })}
+                              aria-label={`Edit ${e.title}`}
+                            >
                               Edit
                             </ABtn>
                             {confirmDelete === e.id ? (
                               <>
-                                <ABtn kind="danger" onClick={() => run(() => getRepository().deleteEvent(e.id), `Deleted ${e.title}.`).then(() => setConfirmDelete(null))}>
+                                <ABtn
+                                  kind="danger"
+                                  onClick={() =>
+                                    run(
+                                      () => getRepository().deleteEvent(e.id),
+                                      `Deleted ${e.title}.`,
+                                    ).then(() => setConfirmDelete(null))
+                                  }
+                                >
                                   {e.seriesId ? 'Delete whole series' : 'Yes, delete'}
                                 </ABtn>
                                 <ABtn onClick={() => setConfirmDelete(null)}>Keep</ABtn>
                               </>
                             ) : (
-                              <ABtn kind="danger" onClick={() => setConfirmDelete(e.id)} aria-label={`Delete ${e.title}`}>
+                              <ABtn
+                                kind="danger"
+                                onClick={() => setConfirmDelete(e.id)}
+                                aria-label={`Delete ${e.title}`}
+                              >
                                 Delete
                               </ABtn>
                             )}
@@ -208,26 +281,46 @@ export function EventsPage() {
         <div>
           <Panel
             id="attendees"
-            title={selected ? `Sign-ups: ${selected.title}, ${formatEventDate(selected, 'MMM d')}` : 'Sign-ups'}
+            title={
+              selected
+                ? `Sign-ups: ${selected.title}, ${formatEventDate(selected, 'MMM d')}`
+                : 'Sign-ups'
+            }
             action={
               selected && (
-                <ABtn onClick={exportAttendees} disabled={!isOwner} title={isOwner ? undefined : 'Owner only in the full build'}>
+                <ABtn
+                  onClick={exportAttendees}
+                  disabled={!isOwner}
+                  title={isOwner ? undefined : 'Owner only in the full build'}
+                >
                   Export attendee list{isOwner ? '' : ' (owner only)'}
                 </ABtn>
               )
             }
           >
             {!selected || !summary ? (
-              <Empty>Pick an event to see who is coming, check people in and manage the waitlist.</Empty>
+              <Empty>
+                Pick an event to see who is coming, check people in and manage the waitlist.
+              </Empty>
             ) : (
               <>
                 <p style={{ marginBottom: 10 }} data-testid="admin-seat-summary">
-                  {summary.hasSeats ? `${summary.taken} of ${summary.capacity} seats taken · ${summary.waitlist} on the waitlist` : 'Open to everyone. Nobody needs to sign up.'}
+                  {summary.hasSeats
+                    ? `${summary.taken} of ${summary.capacity} seats taken · ${summary.waitlist} on the waitlist`
+                    : 'Open to everyone. Nobody needs to sign up.'}
                 </p>
                 <label htmlFor="attendee-filter" className="sr-only">
                   Find a name
                 </label>
-                <input id="attendee-filter" className={styles.inline} style={{ maxWidth: 260, marginBottom: 10 }} type="search" placeholder="Find a name at the door" value={filter} onChange={(e) => setFilter(e.target.value)} />
+                <input
+                  id="attendee-filter"
+                  className={styles.inline}
+                  style={{ maxWidth: 260, marginBottom: 10 }}
+                  type="search"
+                  placeholder="Find a name at the door"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                />
                 {attendees.length === 0 ? (
                   <Empty>No sign-ups match.</Empty>
                 ) : (
@@ -258,22 +351,49 @@ export function EventsPage() {
                             <td>
                               <div className={styles.actions}>
                                 {s.status === 'seated' && (
-                                  <ABtn kind="primary" onClick={() => run(() => getRepository().setSignupStatus(s.id, 'checked-in'))} aria-label={`Check in ${s.name}`}>
+                                  <ABtn
+                                    kind="primary"
+                                    onClick={() =>
+                                      run(() => getRepository().setSignupStatus(s.id, 'checked-in'))
+                                    }
+                                    aria-label={`Check in ${s.name}`}
+                                  >
                                     Check in
                                   </ABtn>
                                 )}
                                 {s.status === 'waitlist' && (
-                                  <ABtn onClick={() => run(() => getRepository().promoteSignup(s.id), `${s.name} moved off the waitlist. Would email them in the full build.`)} disabled={!canPromoteNow} title={canPromoteNow ? undefined : 'No open seat yet'} aria-label={`Promote ${s.name} from the waitlist`}>
+                                  <ABtn
+                                    onClick={() =>
+                                      run(
+                                        () => getRepository().promoteSignup(s.id),
+                                        `${s.name} moved off the waitlist. Would email them in the full build.`,
+                                      )
+                                    }
+                                    disabled={!canPromoteNow}
+                                    title={canPromoteNow ? undefined : 'No open seat yet'}
+                                    aria-label={`Promote ${s.name} from the waitlist`}
+                                  >
                                     Promote
                                   </ABtn>
                                 )}
                                 {(s.status === 'seated' || s.status === 'checked-in') && (
-                                  <ABtn onClick={() => run(() => getRepository().setSignupStatus(s.id, 'no-show'))} aria-label={`Mark ${s.name} no-show`}>
+                                  <ABtn
+                                    onClick={() =>
+                                      run(() => getRepository().setSignupStatus(s.id, 'no-show'))
+                                    }
+                                    aria-label={`Mark ${s.name} no-show`}
+                                  >
                                     No-show
                                   </ABtn>
                                 )}
                                 {s.status !== 'cancelled' && (
-                                  <ABtn kind="danger" onClick={() => run(() => getRepository().setSignupStatus(s.id, 'cancelled'))} aria-label={`Cancel ${s.name}'s seat`}>
+                                  <ABtn
+                                    kind="danger"
+                                    onClick={() =>
+                                      run(() => getRepository().setSignupStatus(s.id, 'cancelled'))
+                                    }
+                                    aria-label={`Cancel ${s.name}'s seat`}
+                                  >
                                     Cancel
                                   </ABtn>
                                 )}
@@ -296,7 +416,8 @@ export function EventsPage() {
                   <b>{s.title}</b>
                   <br />
                   <span className={styles.note}>
-                    {describeRule(s.rule)} · {formatTime(s.startTime)} – {formatTime(s.endTime)} · {s.capacity ? `${s.capacity} seats` : 'open'} · {formatFee(s.feeCents)}
+                    {describeRule(s.rule)} · {formatTime(s.startTime)} – {formatTime(s.endTime)} ·{' '}
+                    {s.capacity ? `${s.capacity} seats` : 'open'} · {formatFee(s.feeCents)}
                   </span>
                 </li>
               ))}

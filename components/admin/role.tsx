@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, useCallback, useContext, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import type { Role } from '@/lib/domain/types';
 
 const KEY = 'sgal-demo-role';
@@ -34,7 +40,11 @@ const Ctx = createContext<RoleCtx>({ role: null, ready: false, setRole: () => {}
 
 export function RoleProvider({ children }: { children: ReactNode }) {
   const role = useSyncExternalStore(subscribe, readRole, () => null);
-  const ready = useSyncExternalStore(subscribe, () => true, () => false);
+  const ready = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
 
   const setRole = useCallback((r: Role | null) => {
     memoryRole = r;
@@ -47,7 +57,11 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     listeners.forEach((l) => l());
   }, []);
 
-  return <Ctx.Provider value={{ role, ready, setRole, isOwner: role === 'owner' }}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={{ role, ready, setRole, isOwner: role === 'owner' }}>
+      {children}
+    </Ctx.Provider>
+  );
 }
 
 export function useRole() {

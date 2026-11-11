@@ -3,11 +3,23 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import { Verify } from '@/components/ui/Verify';
 import type { Settings, WeeklyHours } from '@/lib/domain/types';
-import { STORE_TZ, WEEKDAY_NAMES, WEEK_ORDER, formatRange, upcomingHolidays } from '@/lib/hours/hours';
+import {
+  STORE_TZ,
+  WEEKDAY_NAMES,
+  WEEK_ORDER,
+  formatRange,
+  upcomingHolidays,
+} from '@/lib/hours/hours';
 import { useStoreHours } from './useOpenStatus';
 import styles from './Visit.module.css';
 
-export function HoursCard({ initialSettings, initialNowIso }: { initialSettings: Settings; initialNowIso: string }) {
+export function HoursCard({
+  initialSettings,
+  initialNowIso,
+}: {
+  initialSettings: Settings;
+  initialNowIso: string;
+}) {
   const { settings, now, status } = useStoreHours(initialSettings, initialNowIso);
   const today = Number(formatInTimeZone(now, STORE_TZ, 'i')) % 7; // ISO 1..7 (Mon..Sun) → JS 0..6
   const holidays = upcomingHolidays(settings, now, 60);
@@ -25,7 +37,11 @@ export function HoursCard({ initialSettings, initialNowIso }: { initialSettings:
         <caption className="sr-only">Weekly opening hours</caption>
         <tbody>
           {WEEK_ORDER.map((d) => (
-            <tr key={d} className={d === today ? styles.today : ''} aria-current={d === today ? 'date' : undefined}>
+            <tr
+              key={d}
+              className={d === today ? styles.today : ''}
+              aria-current={d === today ? 'date' : undefined}
+            >
               <th scope="row">{WEEKDAY_NAMES[d]}</th>
               <td>{formatRange(settings.weeklyHours[String(d) as keyof WeeklyHours])}</td>
             </tr>
@@ -39,7 +55,8 @@ export function HoursCard({ initialSettings, initialNowIso }: { initialSettings:
             {holidays.map((h) => (
               <li key={h.id}>
                 <span>
-                  {formatInTimeZone(new Date(`${h.date}T12:00:00Z`), 'UTC', 'EEE, MMM d')} · {h.label}
+                  {formatInTimeZone(new Date(`${h.date}T12:00:00Z`), 'UTC', 'EEE, MMM d')} ·{' '}
+                  {h.label}
                 </span>
                 <b>{formatRange(h.hours)}</b>
               </li>

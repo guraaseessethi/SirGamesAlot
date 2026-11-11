@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { CATEGORIES, EVENT_TYPES, INTERESTS } from './types';
 
-const name = z
-  .string()
-  .trim()
-  .min(2, 'Please enter your name.')
-  .max(80, 'That name is too long.');
+// Our CSP forbids eval. zod's just-in-time mode probes for it, which would log a CSP issue in the
+// browser. Turning it off costs nothing for forms this small.
+z.config({ jitless: true });
+
+const name = z.string().trim().min(2, 'Please enter your name.').max(80, 'That name is too long.');
 
 const phone = z
   .string()
@@ -28,7 +28,10 @@ const contact = z.object({
   marketingConsent: z.boolean().default(false),
 });
 const needsContact = (v: { phone: string; email: string }) => v.phone !== '' || v.email !== '';
-const contactMessage = { message: 'Add a phone number or an email so we can reach you.', path: ['phone'] };
+const contactMessage = {
+  message: 'Add a phone number or an email so we can reach you.',
+  path: ['phone'],
+};
 
 export const holdRequestSchema = contact
   .extend({ sku: z.string().min(1) })
@@ -36,7 +39,11 @@ export const holdRequestSchema = contact
 export type HoldRequest = z.infer<typeof holdRequestSchema>;
 
 export const orderRequestSchema = contact
-  .extend({ sku: z.string().min(1).optional(), productName: z.string().trim().min(2).max(120), note: z.string().trim().max(400).default('') })
+  .extend({
+    sku: z.string().min(1).optional(),
+    productName: z.string().trim().min(2).max(120),
+    note: z.string().trim().max(400).default(''),
+  })
   .refine(needsContact, contactMessage);
 export type OrderRequest = z.infer<typeof orderRequestSchema>;
 
@@ -58,7 +65,11 @@ const ymd = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use a date like 2026-11-21.
 
 export const recurrenceSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('weekly'), weekday: z.number().int().min(0).max(6) }),
-  z.object({ kind: z.literal('nth-weekday'), weekday: z.number().int().min(0).max(6), nth: z.number().int().min(1).max(4) }),
+  z.object({
+    kind: z.literal('nth-weekday'),
+    weekday: z.number().int().min(0).max(6),
+    nth: z.number().int().min(1).max(4),
+  }),
   z.object({ kind: z.literal('last-weekday'), weekday: z.number().int().min(0).max(6) }),
 ]);
 
@@ -77,7 +88,10 @@ export const eventFormSchema = z
       z.object({ mode: z.literal('recurring'), rule: recurrenceSchema }),
     ]),
   })
-  .refine((v) => v.endTime > v.startTime, { message: 'End time must be after the start time.', path: ['endTime'] });
+  .refine((v) => v.endTime > v.startTime, {
+    message: 'End time must be after the start time.',
+    path: ['endTime'],
+  });
 export type EventFormInput = z.infer<typeof eventFormSchema>;
 
 export const productOverrideSchema = z.object({

@@ -172,3 +172,8 @@
 .synced {
   min-width: 1px;
 }
+
+.more {
+  margin-top: 18px;
+  text-align: center;
+}

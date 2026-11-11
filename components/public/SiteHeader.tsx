@@ -23,7 +23,7 @@ export function SiteHeader({ settings, nowIso }: { settings: Settings; nowIso: s
       <ConstructionBanner initial={settings.banner} />
       <div className={styles.top}>
         <div className={`wrap ${styles.topInner}`}>
-          <Link className={styles.miniSign} href="/" aria-label="Sir Games-A-Lot, home">
+          <Link className={styles.miniSign} href="/">
             <SignText className={styles.miniText} />
           </Link>
           <MainNav />

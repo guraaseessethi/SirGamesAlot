@@ -1,4 +1,9 @@
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from 'react';
 import styles from './Field.module.css';
 
 interface FieldShellProps {
@@ -31,32 +36,62 @@ function FieldShell({ id, label, hint, error, children }: FieldShellProps) {
 }
 
 function describedBy(id: string, hint?: string, error?: string) {
-  return [hint ? `${id}-hint` : '', error ? `${id}-err` : ''].filter(Boolean).join(' ') || undefined;
+  return (
+    [hint ? `${id}-hint` : '', error ? `${id}-err` : ''].filter(Boolean).join(' ') || undefined
+  );
 }
 
-type InputProps = { id: string; label: string; hint?: string; error?: string } & Omit<InputHTMLAttributes<HTMLInputElement>, 'id'>;
+type InputProps = { id: string; label: string; hint?: string; error?: string } & Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'id'
+>;
 export function TextField({ id, label, hint, error, ...rest }: InputProps) {
   return (
     <FieldShell id={id} label={label} hint={hint} error={error}>
-      <input id={id} className={styles.input} aria-invalid={error ? true : undefined} aria-describedby={describedBy(id, hint, error)} {...rest} />
+      <input
+        id={id}
+        className={styles.input}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, hint, error)}
+        {...rest}
+      />
     </FieldShell>
   );
 }
 
-type TextAreaProps = { id: string; label: string; hint?: string; error?: string } & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id'>;
+type TextAreaProps = { id: string; label: string; hint?: string; error?: string } & Omit<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'id'
+>;
 export function TextAreaField({ id, label, hint, error, ...rest }: TextAreaProps) {
   return (
     <FieldShell id={id} label={label} hint={hint} error={error}>
-      <textarea id={id} className={styles.input} rows={3} aria-invalid={error ? true : undefined} aria-describedby={describedBy(id, hint, error)} {...rest} />
+      <textarea
+        id={id}
+        className={styles.input}
+        rows={3}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, hint, error)}
+        {...rest}
+      />
     </FieldShell>
   );
 }
 
-type SelectProps = { id: string; label: string; hint?: string; error?: string } & Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id'>;
+type SelectProps = { id: string; label: string; hint?: string; error?: string } & Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  'id'
+>;
 export function SelectField({ id, label, hint, error, children, ...rest }: SelectProps) {
   return (
     <FieldShell id={id} label={label} hint={hint} error={error}>
-      <select id={id} className={styles.input} aria-invalid={error ? true : undefined} aria-describedby={describedBy(id, hint, error)} {...rest}>
+      <select
+        id={id}
+        className={styles.input}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, hint, error)}
+        {...rest}
+      >
         {children}
       </select>
     </FieldShell>

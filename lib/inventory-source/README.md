@@ -16,12 +16,12 @@ threshold) are separate and live in `DataRepository`, so a re-sync never wipes t
 
 ## Phase 2 adapters (write one, swap it in `lib/inventory-source/index.ts`)
 
-| Store runs on | Adapter | Notes |
-|---|---|---|
-| Square | `square.ts` using the Catalog + Inventory APIs | Read-only access token, server-only. Poll about every 15 minutes. |
-| Lightspeed | `lightspeed.ts` | Read-only API key. Map `Item` + `ItemShop.qoh` to `InventoryItem`. |
-| Shopify POS | `shopify.ts` using the Admin API `inventoryLevels` | Read-only scopes only. |
-| No POS with an API | `csv.ts` | Owner uploads a CSV export in admin; we parse with zod and cache it. Or the admin Stock page becomes the source of truth. |
+| Store runs on      | Adapter                                            | Notes                                                                                                                     |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Square             | `square.ts` using the Catalog + Inventory APIs     | Read-only access token, server-only. Poll about every 15 minutes.                                                         |
+| Lightspeed         | `lightspeed.ts`                                    | Read-only API key. Map `Item` + `ItemShop.qoh` to `InventoryItem`.                                                        |
+| Shopify POS        | `shopify.ts` using the Admin API `inventoryLevels` | Read-only scopes only.                                                                                                    |
+| No POS with an API | `csv.ts`                                           | Owner uploads a CSV export in admin; we parse with zod and cache it. Or the admin Stock page becomes the source of truth. |
 
 Rules for every adapter:
 

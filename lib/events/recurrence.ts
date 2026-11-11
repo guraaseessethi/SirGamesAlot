@@ -13,7 +13,12 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
 const parse = (s: string) => new Date(`${s}T00:00:00Z`);
 
 /** Date of the nth (1-based) given weekday in a month. month is 0-based. */
-export function nthWeekdayOfMonth(year: number, month: number, weekday: Weekday, nth: number): string {
+export function nthWeekdayOfMonth(
+  year: number,
+  month: number,
+  weekday: Weekday,
+  nth: number,
+): string {
   const first = new Date(Date.UTC(year, month, 1));
   const offset = (weekday - first.getUTCDay() + 7) % 7;
   return fmt(new Date(Date.UTC(year, month, 1 + offset + (nth - 1) * 7)));

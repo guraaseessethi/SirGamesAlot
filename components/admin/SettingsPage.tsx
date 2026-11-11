@@ -5,7 +5,13 @@ import { CheckField, TextAreaField, TextField } from '@/components/ui/Field';
 import { useToast } from '@/components/ui/Toast';
 import { getRepository } from '@/lib/data';
 import { useRepoData } from '@/lib/data/hooks';
-import type { BannerSettings, DayHours, HolidayOverride, Settings, WeeklyHours } from '@/lib/domain/types';
+import type {
+  BannerSettings,
+  DayHours,
+  HolidayOverride,
+  Settings,
+  WeeklyHours,
+} from '@/lib/domain/types';
 import { WEEKDAY_NAMES, WEEK_ORDER, formatRange, toMinutes } from '@/lib/hours/hours';
 import { ABtn, Empty, PageTitle, Panel } from './AdminUi';
 import { useRole } from './role';
@@ -19,7 +25,10 @@ export function SettingsPage() {
     return (
       <>
         <PageTitle title="Settings" />
-        <p className={styles.ownerOnly}>Settings are owner-only. Switch role to Owner to change hours, the banner, hold length or the d20 promo.</p>
+        <p className={styles.ownerOnly}>
+          Settings are owner-only. Switch role to Owner to change hours, the banner, hold length or
+          the d20 promo.
+        </p>
       </>
     );
   }
@@ -29,7 +38,10 @@ export function SettingsPage() {
       <BannerForm key={JSON.stringify(settings.banner)} banner={settings.banner} />
       <HoursForm key={JSON.stringify(settings.weeklyHours)} hours={settings.weeklyHours} />
       <HolidayForm holidays={settings.holidayOverrides} />
-      <MiscForm key={`${settings.holdHours}|${settings.nextAnniversaryLabel}`} settings={settings} />
+      <MiscForm
+        key={`${settings.holdHours}|${settings.nextAnniversaryLabel}`}
+        settings={settings}
+      />
     </>
   );
 }
@@ -57,19 +69,43 @@ function BannerForm({ banner }: { banner: BannerSettings }) {
           onChange={(e) => {
             const next = { ...v, enabled: e.target.checked };
             setV(next);
-            void save(next, next.enabled ? 'Banner is on.' : 'Banner is off. It is hidden on the public site.');
+            void save(
+              next,
+              next.enabled ? 'Banner is on.' : 'Banner is off. It is hidden on the public site.',
+            );
           }}
         />
         <label htmlFor={`${id}-on`}>Show the banner on the public site</label>
       </div>
       <div className={styles.formGrid}>
-        <TextField id={`${id}-h`} label="Headline" value={v.headline} onChange={(e) => setV({ ...v, headline: e.target.value })} />
-        <TextField id={`${id}-l`} label="Link text" value={v.linkLabel} onChange={(e) => setV({ ...v, linkLabel: e.target.value })} />
+        <TextField
+          id={`${id}-h`}
+          label="Headline"
+          value={v.headline}
+          onChange={(e) => setV({ ...v, headline: e.target.value })}
+        />
+        <TextField
+          id={`${id}-l`}
+          label="Link text"
+          value={v.linkLabel}
+          onChange={(e) => setV({ ...v, linkLabel: e.target.value })}
+        />
         <div className={styles.full}>
-          <TextAreaField id={`${id}-b`} label="Message" value={v.body} onChange={(e) => setV({ ...v, body: e.target.value })} />
+          <TextAreaField
+            id={`${id}-b`}
+            label="Message"
+            value={v.body}
+            onChange={(e) => setV({ ...v, body: e.target.value })}
+          />
         </div>
         <div className={styles.full}>
-          <TextField id={`${id}-href`} label="Link goes to" hint="A page on this site, like /visit#entrance" value={v.linkHref} onChange={(e) => setV({ ...v, linkHref: e.target.value })} />
+          <TextField
+            id={`${id}-href`}
+            label="Link goes to"
+            hint="A page on this site, like /visit#entrance"
+            value={v.linkHref}
+            onChange={(e) => setV({ ...v, linkHref: e.target.value })}
+          />
         </div>
       </div>
       <div className={styles.actions} style={{ marginTop: 12 }}>
@@ -119,17 +155,44 @@ function HoursForm({ hours }: { hours: WeeklyHours }) {
               const h = v[keyOf(d)];
               return (
                 <tr key={d}>
-                  <th scope="row" style={{ textAlign: 'left', fontSize: 14, textTransform: 'none' }}>
+                  <th
+                    scope="row"
+                    style={{ textAlign: 'left', fontSize: 14, textTransform: 'none' }}
+                  >
                     {WEEKDAY_NAMES[d]}
                   </th>
                   <td>
-                    <input type="checkbox" style={{ width: 24, height: 24 }} aria-label={`${WEEKDAY_NAMES[d]} closed`} checked={h === null} onChange={(e) => update(d, e.target.checked ? null : { open: '09:30', close: '17:00' })} />
+                    <input
+                      type="checkbox"
+                      style={{ width: 24, height: 24 }}
+                      aria-label={`${WEEKDAY_NAMES[d]} closed`}
+                      checked={h === null}
+                      onChange={(e) =>
+                        update(d, e.target.checked ? null : { open: '09:30', close: '17:00' })
+                      }
+                    />
                   </td>
                   <td>
-                    <input className={styles.inline} style={{ maxWidth: 130 }} type="time" aria-label={`${WEEKDAY_NAMES[d]} opens`} disabled={!h} value={h?.open ?? ''} onChange={(e) => h && update(d, { ...h, open: e.target.value })} />
+                    <input
+                      className={styles.inline}
+                      style={{ maxWidth: 130 }}
+                      type="time"
+                      aria-label={`${WEEKDAY_NAMES[d]} opens`}
+                      disabled={!h}
+                      value={h?.open ?? ''}
+                      onChange={(e) => h && update(d, { ...h, open: e.target.value })}
+                    />
                   </td>
                   <td>
-                    <input className={styles.inline} style={{ maxWidth: 130 }} type="time" aria-label={`${WEEKDAY_NAMES[d]} closes`} disabled={!h} value={h?.close ?? ''} onChange={(e) => h && update(d, { ...h, close: e.target.value })} />
+                    <input
+                      className={styles.inline}
+                      style={{ maxWidth: 130 }}
+                      type="time"
+                      aria-label={`${WEEKDAY_NAMES[d]} closes`}
+                      disabled={!h}
+                      value={h?.close ?? ''}
+                      onChange={(e) => h && update(d, { ...h, close: e.target.value })}
+                    />
                   </td>
                 </tr>
               );
@@ -165,10 +228,18 @@ function HolidayForm({ holidays }: { holidays: HolidayOverride[] }) {
   async function add() {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return setError('Pick a date.');
     if (label.trim().length < 2) return setError('Give it a name, like “Family Day”.');
-    if (!closed && toMinutes(close) <= toMinutes(open)) return setError('Closing time must be after opening time.');
+    if (!closed && toMinutes(close) <= toMinutes(open))
+      return setError('Closing time must be after opening time.');
     setError('');
-    const next: HolidayOverride = { id: `hol-${Date.now().toString(36)}`, date, label: label.trim(), hours: closed ? null : { open, close } };
-    await getRepository().updateSettings({ holidayOverrides: [...holidays.filter((h) => h.date !== date), next] });
+    const next: HolidayOverride = {
+      id: `hol-${Date.now().toString(36)}`,
+      date,
+      label: label.trim(),
+      hours: closed ? null : { open, close },
+    };
+    await getRepository().updateSettings({
+      holidayOverrides: [...holidays.filter((h) => h.date !== date), next],
+    });
     setDate('');
     setLabel('');
     toast('Holiday hours saved.');
@@ -181,11 +252,28 @@ function HolidayForm({ holidays }: { holidays: HolidayOverride[] }) {
       ) : (
         <ul style={{ listStyle: 'none', margin: '0 0 14px', padding: 0, display: 'grid', gap: 6 }}>
           {sorted.map((h) => (
-            <li key={h.id} className={styles.row} style={{ justifyContent: 'space-between', borderBottom: '1px solid var(--soft)', paddingBottom: 6 }}>
+            <li
+              key={h.id}
+              className={styles.row}
+              style={{
+                justifyContent: 'space-between',
+                borderBottom: '1px solid var(--soft)',
+                paddingBottom: 6,
+              }}
+            >
               <span>
                 <b>{h.date}</b> · {h.label} · {formatRange(h.hours)}
               </span>
-              <ABtn kind="danger" onClick={async () => { await getRepository().updateSettings({ holidayOverrides: holidays.filter((x) => x.id !== h.id) }); toast('Removed.'); }} aria-label={`Remove ${h.label}`}>
+              <ABtn
+                kind="danger"
+                onClick={async () => {
+                  await getRepository().updateSettings({
+                    holidayOverrides: holidays.filter((x) => x.id !== h.id),
+                  });
+                  toast('Removed.');
+                }}
+                aria-label={`Remove ${h.label}`}
+              >
                 Remove
               </ABtn>
             </li>
@@ -193,15 +281,43 @@ function HolidayForm({ holidays }: { holidays: HolidayOverride[] }) {
         </ul>
       )}
       <div className={styles.formGrid}>
-        <TextField id={`${id}-d`} label="Date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        <TextField id={`${id}-n`} label="Name" value={label} onChange={(e) => setLabel(e.target.value)} />
+        <TextField
+          id={`${id}-d`}
+          label="Date"
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <TextField
+          id={`${id}-n`}
+          label="Name"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+        />
         <div className={styles.full}>
-          <CheckField id={`${id}-c`} checked={closed} onChange={(e) => setClosed(e.target.checked)} label="Closed all day" />
+          <CheckField
+            id={`${id}-c`}
+            checked={closed}
+            onChange={(e) => setClosed(e.target.checked)}
+            label="Closed all day"
+          />
         </div>
         {!closed && (
           <>
-            <TextField id={`${id}-o`} label="Opens" type="time" value={open} onChange={(e) => setOpen(e.target.value)} />
-            <TextField id={`${id}-cl`} label="Closes" type="time" value={close} onChange={(e) => setClose(e.target.value)} />
+            <TextField
+              id={`${id}-o`}
+              label="Opens"
+              type="time"
+              value={open}
+              onChange={(e) => setOpen(e.target.value)}
+            />
+            <TextField
+              id={`${id}-cl`}
+              label="Closes"
+              type="time"
+              value={close}
+              onChange={(e) => setClose(e.target.value)}
+            />
           </>
         )}
       </div>
@@ -228,17 +344,36 @@ function MiscForm({ settings }: { settings: Settings }) {
 
   async function save() {
     const h = Number(hold);
-    if (!Number.isInteger(h) || h < 1 || h > 168) return setError('Hold length must be a whole number of hours, from 1 to 168.');
+    if (!Number.isInteger(h) || h < 1 || h > 168)
+      return setError('Hold length must be a whole number of hours, from 1 to 168.');
     setError('');
-    await getRepository().updateSettings({ holdHours: h, nextAnniversaryLabel: label.trim() || 'Date TBA' });
+    await getRepository().updateSettings({
+      holdHours: h,
+      nextAnniversaryLabel: label.trim() || 'Date TBA',
+    });
     toast('Saved.');
   }
 
   return (
     <Panel id="misc" title="Holds, d20 promo and anniversary">
       <div className={styles.formGrid}>
-        <TextField id={`${id}-hold`} label="Hold length (hours)" type="number" min={1} max={168} value={hold} error={error} onChange={(e) => setHold(e.target.value)} />
-        <TextField id={`${id}-ann`} label="Next anniversary event" hint="Shown on the events flyer, like “May 2027 · date TBA”." value={label} onChange={(e) => setLabel(e.target.value)} />
+        <TextField
+          id={`${id}-hold`}
+          label="Hold length (hours)"
+          type="number"
+          min={1}
+          max={168}
+          value={hold}
+          error={error}
+          onChange={(e) => setHold(e.target.value)}
+        />
+        <TextField
+          id={`${id}-ann`}
+          label="Next anniversary event"
+          hint="Shown on the events flyer, like “May 2027 · date TBA”."
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+        />
       </div>
       <div className={styles.toggle} style={{ margin: '14px 0' }}>
         <input
@@ -247,7 +382,11 @@ function MiscForm({ settings }: { settings: Settings }) {
           checked={settings.d20PromoEnabled}
           onChange={async (e) => {
             await getRepository().updateSettings({ d20PromoEnabled: e.target.checked });
-            toast(e.target.checked ? 'd20 promo is on.' : 'd20 promo is off. The die still rolls, but the discount copy is paused.');
+            toast(
+              e.target.checked
+                ? 'd20 promo is on.'
+                : 'd20 promo is off. The die still rolls, but the discount copy is paused.',
+            );
           }}
         />
         <label htmlFor={`${id}-d20`}>“Take 10% off, or roll for it” is running</label>

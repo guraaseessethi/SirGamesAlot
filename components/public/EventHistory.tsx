@@ -7,10 +7,19 @@ import { Verify } from '@/components/ui/Verify';
 import styles from './Events.module.css';
 
 /** Events that already happened. Past events never appear in the upcoming list. */
-export function EventHistory({ initialEvents, initialNowIso }: { initialEvents: StoreEvent[]; initialNowIso: string }) {
+export function EventHistory({
+  initialEvents,
+  initialNowIso,
+}: {
+  initialEvents: StoreEvent[];
+  initialNowIso: string;
+}) {
   const events = useRepoData((r) => r.listEvents(), initialEvents);
   const now = useNow(initialNowIso);
-  const past = events.filter((e) => !isUpcoming(e, now) && !e.seriesId).sort((a, b) => b.startsAt.localeCompare(a.startsAt)).slice(0, 5);
+  const past = events
+    .filter((e) => !isUpcoming(e, now) && !e.seriesId)
+    .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
+    .slice(0, 5);
 
   return (
     <section className={styles.past} aria-labelledby="event-history-title">

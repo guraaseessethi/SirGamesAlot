@@ -15,9 +15,10 @@
   cursor: pointer;
   justify-self: center;
   display: block;
+  position: relative;
 }
 
-.die > span {
+.face {
   display: block;
   width: 100%;
   height: 100%;

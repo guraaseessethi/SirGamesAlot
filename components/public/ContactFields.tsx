@@ -36,7 +36,9 @@ export function ContactFields({
         required
       />
       <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>How can we reach you? Phone or email, one is enough.</legend>
+        <legend className={styles.legend}>
+          How can we reach you? Phone or email, one is enough.
+        </legend>
         <TextField
           id={`${idPrefix}-phone`}
           label="Phone"

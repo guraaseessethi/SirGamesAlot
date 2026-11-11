@@ -15,7 +15,16 @@ export function categoryColor(c: Category): string {
 
 /** Simple line icons drawn for this site. No publisher logos or artwork. */
 export function CategoryIcon({ category }: { category: Category }) {
-  const p = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, width: 24, height: 24, 'aria-hidden': true, focusable: false } as const;
+  const p = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2.2,
+    width: 24,
+    height: 24,
+    'aria-hidden': true,
+    focusable: false,
+  } as const;
   switch (category) {
     case 'Warhammer':
       return (

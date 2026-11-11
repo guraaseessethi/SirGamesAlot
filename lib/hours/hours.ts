@@ -14,7 +14,15 @@ export const DEFAULT_HOURS: WeeklyHours = {
   '6': { open: '09:30', close: '18:00' },
 };
 
-export const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+export const WEEKDAY_NAMES = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
 /** Monday first, the way people read a shop's hours. */
 export const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0] as const;
 
@@ -46,7 +54,10 @@ export interface ResolvedDay {
 }
 
 /** Hours for a calendar date: a holiday override wins over the weekly pattern. */
-export function resolveDay(settings: Pick<Settings, 'weeklyHours' | 'holidayOverrides'>, date: string): ResolvedDay {
+export function resolveDay(
+  settings: Pick<Settings, 'weeklyHours' | 'holidayOverrides'>,
+  date: string,
+): ResolvedDay {
   const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
   const holiday = settings.holidayOverrides.find((h) => h.date === date);
   if (holiday) return { date, weekday, hours: holiday.hours, holidayLabel: holiday.label };
@@ -73,7 +84,11 @@ export function getOpenStatus(
     const o = toMinutes(day.hours.open);
     const c = toMinutes(day.hours.close);
     if (minutes >= o && minutes < c) {
-      return { open: true, text: `Open now until ${formatTime(day.hours.close)}`, holidayLabel: day.holidayLabel };
+      return {
+        open: true,
+        text: `Open now until ${formatTime(day.hours.close)}`,
+        holidayLabel: day.holidayLabel,
+      };
     }
     if (minutes < o) {
       return {
@@ -91,15 +106,27 @@ export function getOpenStatus(
     const next = resolveDay(settings, date);
     if (next.hours) {
       const when = i === 1 ? 'tomorrow' : `on ${WEEKDAY_NAMES[next.weekday]}`;
-      const closedToday = day.hours ? 'Closed now' : day.holidayLabel ? `Closed today (${day.holidayLabel})` : 'Closed today';
-      return { open: false, text: `${closedToday} · opens ${formatTime(next.hours.open)} ${when}`, holidayLabel: day.holidayLabel };
+      const closedToday = day.hours
+        ? 'Closed now'
+        : day.holidayLabel
+          ? `Closed today (${day.holidayLabel})`
+          : 'Closed today';
+      return {
+        open: false,
+        text: `${closedToday} · opens ${formatTime(next.hours.open)} ${when}`,
+        holidayLabel: day.holidayLabel,
+      };
     }
   }
   return { open: false, text: 'Closed · call 705-719-1291 for hours' };
 }
 
 /** Upcoming holiday overrides within `days` days, soonest first. */
-export function upcomingHolidays(settings: Pick<Settings, 'holidayOverrides'>, now: Date, days = 60) {
+export function upcomingHolidays(
+  settings: Pick<Settings, 'holidayOverrides'>,
+  now: Date,
+  days = 60,
+) {
   const today = formatInTimeZone(now, STORE_TZ, 'yyyy-MM-dd');
   const limit = formatInTimeZone(addDays(now, days), STORE_TZ, 'yyyy-MM-dd');
   return settings.holidayOverrides
@@ -113,6 +140,8 @@ export function openingHoursSpecification(weekly: WeeklyHours) {
   return WEEK_ORDER.flatMap((d) => {
     const h = weekly[String(d) as keyof WeeklyHours];
     if (!h) return [];
-    return [{ '@type': 'OpeningHoursSpecification', dayOfWeek: days[d], opens: h.open, closes: h.close }];
+    return [
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: days[d], opens: h.open, closes: h.close },
+    ];
   });
 }

@@ -1,9 +1,9 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useId, useMemo, useState } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
-import { getInventorySource } from '@/lib/data';
-import { useRepoData } from '@/lib/data/hooks';
+import { useIdlePrefetch, useRepoData } from '@/lib/data/hooks';
 import { CATEGORIES, type Category, type Product, type Settings } from '@/lib/domain/types';
 import { STORE_TZ } from '@/lib/hours/hours';
 import { formatPrice } from '@/lib/money';
@@ -12,10 +12,19 @@ import { STATUS_META, summarize } from '@/lib/stock/status';
 import { loadProducts } from '@/lib/stock/catalog';
 import { Button } from '@/components/ui/Button';
 import { CategoryIcon, categoryColor } from './CategoryIcon';
-import { RequestDialog, requestDoneLabel, requestIdleLabel, type RequestMode } from './RequestDialog';
+import { requestDoneLabel, requestIdleLabel, type RequestMode } from './requestLabels';
 import styles from './StockChecker.module.css';
 
-const STATUS_CLASS = { in: styles.sIn, low: styles.sLow, order: styles.sOrder, out: styles.sOut } as const;
+// Loaded on demand: the form, validation and repository are not needed until someone taps a button.
+const loadDialog = () => import('./RequestDialog');
+const RequestDialog = dynamic(() => loadDialog().then((m) => m.RequestDialog), { ssr: false });
+
+const STATUS_CLASS = {
+  in: styles.sIn,
+  low: styles.sLow,
+  order: styles.sOrder,
+  out: styles.sOut,
+} as const;
 
 function syncedLabel(synced: Date | null, now: Date): string {
   if (!synced) return '';
@@ -30,24 +39,39 @@ export function StockChecker({
   initialSettings,
   idPrefix = 'stock',
   initialCategory = 'All',
+  previewCount,
 }: {
   initialProducts: Product[];
   initialSettings: Settings;
   idPrefix?: string;
   initialCategory?: Category | 'All';
+  /** On the home page, show this many items until the shopper searches, filters or taps "show all". */
+  previewCount?: number;
 }) {
-  const products = useRepoData((repo) => loadProducts(getInventorySource(), repo), initialProducts);
+  const products = useRepoData((repo, source) => loadProducts(source, repo), initialProducts);
   const settings = useRepoData((repo) => repo.getSettings(), initialSettings);
-  const synced = useRepoData(() => getInventorySource().lastSyncedAt(), null as Date | null);
+  const synced = useRepoData((_repo, source) => source.lastSyncedAt(), null as Date | null);
 
   const [q, setQ] = useState('');
   const [category, setCategory] = useState<Category | 'All'>(initialCategory);
   const [sort, setSort] = useState<SortKey>('name');
+  const [showAll, setShowAll] = useState(false);
   const [dialog, setDialog] = useState<{ mode: RequestMode; product: Product } | null>(null);
   const [done, setDone] = useState<Record<string, RequestMode>>({});
   const uid = useId().replace(/:/g, '');
 
-  const list = useMemo(() => filterProducts(products, { q, category, sort }), [products, q, category, sort]);
+  useIdlePrefetch(loadDialog);
+  const all = useMemo(
+    () => filterProducts(products, { q, category, sort }),
+    [products, q, category, sort],
+  );
+  const trimmed =
+    previewCount !== undefined &&
+    !showAll &&
+    q === '' &&
+    category === 'All' &&
+    all.length > previewCount;
+  const list = trimmed ? all.slice(0, previewCount) : all;
   const counts = useMemo(() => summarize(products), [products]);
 
   return (
@@ -72,7 +96,12 @@ export function StockChecker({
           <label htmlFor={`${idPrefix}-sort`} className="sr-only">
             Sort by
           </label>
-          <select id={`${idPrefix}-sort`} className={styles.sel} value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+          <select
+            id={`${idPrefix}-sort`}
+            className={styles.sel}
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+          >
             <option value="name">A to Z</option>
             <option value="status">In stock first</option>
             <option value="price">Price, low to high</option>
@@ -82,7 +111,12 @@ export function StockChecker({
 
       <div className={styles.chips} role="group" aria-label="Category">
         {(['All', ...CATEGORIES] as const).map((c) => (
-          <button key={c} type="button" aria-pressed={category === c} onClick={() => setCategory(c)}>
+          <button
+            key={c}
+            type="button"
+            aria-pressed={category === c}
+            onClick={() => setCategory(c)}
+          >
             {c}
           </button>
         ))}
@@ -90,15 +124,17 @@ export function StockChecker({
 
       <div className={styles.meta}>
         <span role="status" aria-live="polite">
-          {list.length === products.length
+          {all.length === products.length
             ? `${counts.in} in stock · ${counts.low} low · ${counts.order + counts.out} to order`
-            : `Showing ${list.length} of ${products.length} items`}
+            : `Showing ${all.length} of ${products.length} items`}
         </span>
         <span className={styles.synced}>{syncedLabel(synced, new Date())}</span>
       </div>
 
       {list.length === 0 ? (
-        <div className={styles.empty}>Nothing matches that. Call 705-719-1291 and we&apos;ll check the back room.</div>
+        <div className={styles.empty}>
+          Nothing matches that. Call 705-719-1291 and we&apos;ll check the back room.
+        </div>
       ) : (
         <ul className={styles.items}>
           {list.map((p) => {
@@ -123,7 +159,9 @@ export function StockChecker({
                     aria-label={`${doneMode ? requestDoneLabel(doneMode, settings.holdHours) : requestIdleLabel(meta.action)}: ${p.name}`}
                     aria-describedby={`${uid}-${p.sku}`}
                   >
-                    {doneMode ? requestDoneLabel(doneMode, settings.holdHours) : requestIdleLabel(meta.action)}
+                    {doneMode
+                      ? requestDoneLabel(doneMode, settings.holdHours)
+                      : requestIdleLabel(meta.action)}
                   </Button>
                 </div>
                 <div className={styles.where} id={`${uid}-${p.sku}`}>
@@ -137,17 +175,32 @@ export function StockChecker({
         </ul>
       )}
 
+      {trimmed && (
+        <p className={styles.more}>
+          <Button variant="blue" onClick={() => setShowAll(true)}>
+            Show all {all.length} items
+          </Button>
+        </p>
+      )}
       <p className={styles.note}>
-        <span className="sample">Demo shows sample stock and prices. The live version syncs with the store&apos;s real counts.</span>
+        <span className="sample">
+          Demo shows sample stock and prices. The live version syncs with the store&apos;s real
+          counts.
+        </span>
       </p>
-      <p className={styles.fine}>Prices are before HST (13%). Holds are kept for {settings.holdHours} hours. No online payment; you pay at the counter.</p>
+      <p className={styles.fine}>
+        Prices are before HST (13%). Holds are kept for {settings.holdHours} hours. No online
+        payment; you pay at the counter.
+      </p>
 
-      <RequestDialog
-        mode={dialog?.mode ?? null}
-        product={dialog?.product ?? null}
-        onClose={() => setDialog(null)}
-        onDone={(mode, product) => setDone((d) => ({ ...d, [product.sku]: mode }))}
-      />
+      {dialog && (
+        <RequestDialog
+          mode={dialog.mode}
+          product={dialog.product}
+          onClose={() => setDialog(null)}
+          onDone={(mode, product) => setDone((d) => ({ ...d, [product.sku]: mode }))}
+        />
+      )}
     </div>
   );
 }

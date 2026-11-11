@@ -4,9 +4,16 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { useToast } from '@/components/ui/Toast';
-import { getInventorySource, getRepository } from '@/lib/data';
+import { getRepository } from '@/lib/data';
 import { useNow, useRepoData } from '@/lib/data/hooks';
-import type { BackInStockRequest, EventSignup, Hold, Product, SpecialOrder, StoreEvent } from '@/lib/domain/types';
+import type {
+  BackInStockRequest,
+  EventSignup,
+  Hold,
+  Product,
+  SpecialOrder,
+  StoreEvent,
+} from '@/lib/domain/types';
 import { seatSummary } from '@/lib/events/seats';
 import { STORE_TZ, formatTime } from '@/lib/hours/hours';
 import { loadProducts } from '@/lib/stock/catalog';
@@ -22,13 +29,22 @@ export function TodayPage() {
   const waitlists = useRepoData<BackInStockRequest[] | null>((r) => r.listBackInStock(), null);
   const events = useRepoData<StoreEvent[] | null>((r) => r.listEvents(), null);
   const signups = useRepoData<EventSignup[] | null>((r) => r.listSignups(), null);
-  const products = useRepoData<Product[] | null>((r) => loadProducts(getInventorySource(), r), null);
+  const products = useRepoData<Product[] | null>((r, source) => loadProducts(source, r), null);
 
   const today = formatInTimeZone(now, STORE_TZ, 'yyyy-MM-dd');
-  const toPull = useMemo(() => (holds ?? []).filter((h) => h.status === 'active').sort((a, b) => a.expiresAt.localeCompare(b.expiresAt)), [holds]);
+  const toPull = useMemo(
+    () =>
+      (holds ?? [])
+        .filter((h) => h.status === 'active')
+        .sort((a, b) => a.expiresAt.localeCompare(b.expiresAt)),
+    [holds],
+  );
   const toCall = useMemo(() => (orders ?? []).filter((o) => o.stage === 'arrived'), [orders]);
   const toOrder = useMemo(() => (orders ?? []).filter((o) => o.stage === 'requested'), [orders]);
-  const todaysEvents = useMemo(() => (events ?? []).filter((e) => e.date === today), [events, today]);
+  const todaysEvents = useMemo(
+    () => (events ?? []).filter((e) => e.date === today),
+    [events, today],
+  );
   const lowStock = useMemo(() => (products ?? []).filter((p) => p.status !== 'in'), [products]);
   const waiting = useMemo(() => (waitlists ?? []).filter((w) => !w.notifiedAt), [waitlists]);
 
@@ -36,11 +52,21 @@ export function TodayPage() {
 
   return (
     <>
-      <PageTitle title="Today">What needs doing at the counter right now. Everything here is sample data in this demo.</PageTitle>
+      <PageTitle title="Today">
+        What needs doing at the counter right now. Everything here is sample data in this demo.
+      </PageTitle>
 
       <div className={styles.stats}>
-        <Stat label="Holds to pull" value={toPull.length} tone={toPull.length ? 'warn' : undefined} />
-        <Stat label="Orders to call about" value={toCall.length} tone={toCall.length ? 'info' : undefined} />
+        <Stat
+          label="Holds to pull"
+          value={toPull.length}
+          tone={toPull.length ? 'warn' : undefined}
+        />
+        <Stat
+          label="Orders to call about"
+          value={toCall.length}
+          tone={toCall.length ? 'info' : undefined}
+        />
         <Stat label="Orders to place" value={toOrder.length} />
         <Stat label="Events today" value={todaysEvents.length} />
         <Stat label="Low or out of stock" value={lowStock.length} />
@@ -94,7 +120,11 @@ export function TodayPage() {
           )}
         </Panel>
 
-        <Panel id="call" title="Special orders to call" action={<Link href="/admin/holds#orders">Pipeline</Link>}>
+        <Panel
+          id="call"
+          title="Special orders to call"
+          action={<Link href="/admin/holds#orders">Pipeline</Link>}
+        >
           {toCall.length === 0 && toOrder.length === 0 ? (
             <Empty>Nothing waiting.</Empty>
           ) : (
@@ -121,19 +151,28 @@ export function TodayPage() {
           )}
         </Panel>
 
-        <Panel id="events-today" title="Today's events" action={<Link href="/admin/events">Manage events</Link>}>
+        <Panel
+          id="events-today"
+          title="Today's events"
+          action={<Link href="/admin/events">Manage events</Link>}
+        >
           {todaysEvents.length === 0 ? (
             <Empty>No events today.</Empty>
           ) : (
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 10 }}>
               {todaysEvents.map((e) => {
-                const s = seatSummary(e.capacity, signups.filter((x) => x.eventId === e.id));
+                const s = seatSummary(
+                  e.capacity,
+                  signups.filter((x) => x.eventId === e.id),
+                );
                 return (
                   <li key={e.id}>
                     <b>{e.title}</b> · {formatTime(e.startTime)} – {formatTime(e.endTime)}
                     <br />
                     <span className={styles.note}>
-                      {s.hasSeats ? `${s.taken} of ${s.capacity} seats taken · ${s.waitlist} on waitlist` : 'Open to everyone'}
+                      {s.hasSeats
+                        ? `${s.taken} of ${s.capacity} seats taken · ${s.waitlist} on waitlist`
+                        : 'Open to everyone'}
                     </span>
                   </li>
                 );
@@ -160,7 +199,11 @@ export function TodayPage() {
                     <tr key={p.sku}>
                       <td>{p.name}</td>
                       <td>
-                        <Badge tone={p.status === 'low' ? 'warn' : p.status === 'order' ? 'info' : 'bad'}>{STATUS_META[p.status].label}</Badge>
+                        <Badge
+                          tone={p.status === 'low' ? 'warn' : p.status === 'order' ? 'info' : 'bad'}
+                        >
+                          {STATUS_META[p.status].label}
+                        </Badge>
                       </td>
                       <td style={{ textAlign: 'right' }}>{p.count}</td>
                     </tr>
@@ -173,9 +216,14 @@ export function TodayPage() {
       </div>
 
       {waiting.length > 0 && (
-        <Panel id="waiting" title="People waiting for restocks" action={<Link href="/admin/holds#waitlists">Notify</Link>}>
+        <Panel
+          id="waiting"
+          title="People waiting for restocks"
+          action={<Link href="/admin/holds#waitlists">Notify</Link>}
+        >
           <p>
-            {waiting.length} {waiting.length === 1 ? 'person is' : 'people are'} waiting to hear when sold-out items are back.
+            {waiting.length} {waiting.length === 1 ? 'person is' : 'people are'} waiting to hear
+            when sold-out items are back.
           </p>
         </Panel>
       )}

@@ -6,7 +6,10 @@ import styles from './Events.module.css';
 
 /** The comic-flyer panel. The next date is a setting, so the owner can announce it without a developer. */
 export function AnniversaryFlyer({ initialLabel }: { initialLabel: string }) {
-  const label = useRepoData(async (r) => (await r.getSettings()).nextAnniversaryLabel, initialLabel);
+  const label = useRepoData(
+    async (r) => (await r.getSettings()).nextAnniversaryLabel,
+    initialLabel,
+  );
   return (
     <div className={styles.flyer}>
       <div className={styles.p1}>
@@ -29,7 +32,8 @@ export function AnniversaryFlyer({ initialLabel }: { initialLabel: string }) {
       </div>
       <div className={styles.p3}>
         <b>Come in costume</b>
-        An extra $5 off for anyone in cosplay, all day. Any theme. <Verify note="is the $5 cosplay discount still on?" />
+        An extra $5 off for anyone in cosplay, all day. Any theme.{' '}
+        <Verify note="is the $5 cosplay discount still on?" />
       </div>
     </div>
   );

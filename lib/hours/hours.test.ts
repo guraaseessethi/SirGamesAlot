@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSettings } from '@/lib/data/mock/seed';
-import { formatRange, formatTime, getOpenStatus, openingHoursSpecification, resolveDay, upcomingHolidays } from './hours';
+import {
+  formatRange,
+  formatTime,
+  getOpenStatus,
+  openingHoursSpecification,
+  resolveDay,
+  upcomingHolidays,
+} from './hours';
 
 const settings = defaultSettings();
 // Instants are written in UTC; Toronto is UTC-5 in winter (EST) and UTC-4 in summer (EDT).
@@ -38,7 +45,9 @@ describe('open now', () => {
   });
   it('uses Saturday and Sunday hours', () => {
     expect(getOpenStatus(settings, at('2026-11-14T23:30:00Z'))).toMatchObject({ open: false }); // Sat 6:30 pm
-    expect(getOpenStatus(settings, at('2026-11-14T23:30:00Z')).text).toBe('Closed now · opens 11 am tomorrow');
+    expect(getOpenStatus(settings, at('2026-11-14T23:30:00Z')).text).toBe(
+      'Closed now · opens 11 am tomorrow',
+    );
     expect(getOpenStatus(settings, at('2026-11-15T16:00:00Z')).text).toBe('Open now until 5 pm'); // Sun 11 am
   });
   it('is based on Toronto time, not the viewer’s time zone', () => {
@@ -64,15 +73,23 @@ describe('holiday overrides', () => {
     expect(getOpenStatus(settings, at('2026-12-24T22:30:00Z')).open).toBe(false); // 5:30 pm
   });
   it('resolves the day with its label', () => {
-    expect(resolveDay(settings, '2026-12-25')).toMatchObject({ hours: null, holidayLabel: 'Christmas Day (sample)' });
+    expect(resolveDay(settings, '2026-12-25')).toMatchObject({
+      hours: null,
+      holidayLabel: 'Christmas Day (sample)',
+    });
     expect(resolveDay(settings, '2026-12-23').holidayLabel).toBeUndefined();
   });
   it('looks ahead over several closed days', () => {
-    const custom = { ...settings, holidayOverrides: [
-      { id: 'a', date: '2026-11-12', label: 'Reno', hours: null },
-      { id: 'b', date: '2026-11-13', label: 'Reno', hours: null },
-    ] };
-    expect(getOpenStatus(custom, at('2026-11-12T03:00:00Z')).text).toContain('opens 9:30 am on Saturday');
+    const custom = {
+      ...settings,
+      holidayOverrides: [
+        { id: 'a', date: '2026-11-12', label: 'Reno', hours: null },
+        { id: 'b', date: '2026-11-13', label: 'Reno', hours: null },
+      ],
+    };
+    expect(getOpenStatus(custom, at('2026-11-12T03:00:00Z')).text).toContain(
+      'opens 9:30 am on Saturday',
+    );
   });
   it('lists upcoming holidays soonest first', () => {
     const list = upcomingHolidays(settings, at('2026-12-01T12:00:00Z'), 60).map((h) => h.date);

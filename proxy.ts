@@ -27,7 +27,9 @@ export function proxy(request: NextRequest) {
   ].join('; ');
 
   const reviewParam = request.nextUrl.searchParams.get('review');
-  const review = reviewParam === '1' || (reviewParam !== '0' && request.cookies.get('sgal-review')?.value === '1');
+  const review =
+    reviewParam === '1' ||
+    (reviewParam !== '0' && request.cookies.get('sgal-review')?.value === '1');
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);

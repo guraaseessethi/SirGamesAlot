@@ -23,7 +23,9 @@ function normalize(s: string): string {
 export function matchesQuery(product: Product, q: string): boolean {
   const tokens = normalize(q).split(' ').filter(Boolean);
   if (tokens.length === 0) return true;
-  const hay = normalize(`${product.name} ${product.description} ${product.category} ${product.shelf}`);
+  const hay = normalize(
+    `${product.name} ${product.description} ${product.category} ${product.shelf}`,
+  );
   return tokens.every((t) => hay.includes(t) || (t === 'dnd' && hay.includes('d and d')));
 }
 
