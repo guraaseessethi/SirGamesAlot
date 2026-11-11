@@ -1,0 +1,54 @@
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.label {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  font-size: 16px;
+  padding: 10px 12px;
+  border: var(--field-border, 3px) solid var(--ink);
+  background: #fff;
+  border-radius: 0;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--red);
+  background: #fff6f6;
+}
+
+.error {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.box {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+.check label {
+  padding-top: 1px;
+}

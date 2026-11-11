@@ -1,0 +1,28 @@
+.foot {
+  background: var(--blue);
+  color: #fff;
+  padding-block: 30px;
+  border-top: 3px solid var(--ink);
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.sign {
+  font-size: 26px;
+}
+
+.text {
+  display: grid;
+  gap: 4px;
+}
+
+.foot a {
+  color: #fff;
+}

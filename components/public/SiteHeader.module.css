@@ -1,0 +1,130 @@
+.ribbon {
+  background: var(--cream);
+  border-bottom: 2px dashed var(--amber);
+  color: var(--amber);
+  font-size: 13px;
+  text-align: center;
+  padding: 5px 16px;
+}
+
+.alert {
+  background: var(--yellow);
+  border-bottom: 3px solid var(--ink);
+}
+
+.alertInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-block: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.alert a {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.alert b {
+  font-family: var(--display);
+  font-weight: 400;
+}
+
+.top {
+  background: #fff;
+  border-bottom: 3px solid var(--ink);
+}
+
+.topInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 20px;
+  padding-block: 12px;
+  flex-wrap: wrap;
+}
+
+.miniSign {
+  display: inline-flex;
+  align-items: center;
+  background: var(--blue);
+  border: 3px solid var(--ink);
+  padding: 6px 12px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.miniText {
+  font-size: 20px;
+  -webkit-text-stroke: 1.2px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover,
+.nav a[aria-current='page'] {
+  border-color: var(--red);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+}
+
+.phone {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.open i {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  background: var(--soft);
+}
+
+.open i.on {
+  background: var(--green);
+}
+
+@media (max-width: 860px) {
+  .nav {
+    order: 3;
+    width: 100%;
+    gap: 2px 16px;
+  }
+}

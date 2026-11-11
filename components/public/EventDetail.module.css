@@ -1,0 +1,95 @@
+.card {
+  border: 3px solid var(--ink);
+  box-shadow: 7px 7px 0 var(--ink);
+  background: #fff;
+  max-width: 760px;
+}
+
+.head {
+  background: var(--yellow);
+  padding: 22px;
+  border-bottom: 3px solid var(--ink);
+}
+
+.type {
+  font-family: var(--comic);
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  background: var(--red);
+  color: #fff;
+  border: 2px solid var(--ink);
+  padding: 0 10px;
+}
+
+.head h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(28px, 4.6vw, 44px);
+  line-height: 1.05;
+  margin-top: 10px;
+}
+
+.when {
+  font-weight: 800;
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+.body {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.facts {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.facts div {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 12px;
+  border-top: 2px dashed var(--soft);
+  padding-top: 12px;
+}
+
+.facts dt {
+  font-weight: 800;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.back {
+  font-weight: 700;
+}
+
+.past {
+  font-weight: 700;
+  color: var(--gray);
+}
+
+.missing {
+  border: 3px dashed var(--ink);
+  padding: 28px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.missing h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+}

@@ -1,0 +1,6 @@
+.card {
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  background: #fff;
+  max-width: 640px;
+}

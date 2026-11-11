@@ -1,0 +1,174 @@
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.searchWrap {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.search {
+  width: 100%;
+  font-size: 17px;
+  min-height: 52px;
+  padding: 13px 14px;
+  border: 3px solid var(--ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--ink);
+  border-radius: 0;
+}
+
+.sel {
+  font-weight: 700;
+  font-size: 14px;
+  min-height: 52px;
+  padding: 12px;
+  border: 3px solid var(--ink);
+  background: #fff;
+  border-radius: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.chips button {
+  font-weight: 800;
+  font-size: 13px;
+  min-height: 36px;
+  border: 2px solid var(--ink);
+  background: #fff;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.chips button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--yellow);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+  margin: 16px 0 10px;
+  min-height: 20px;
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.item {
+  border: 3px solid var(--ink);
+  background: #fff;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.ico {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.ln {
+  font-size: 13px;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+.row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.price {
+  font-family: var(--display);
+  font-size: 17px;
+}
+
+.pill {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border: 2px solid currentColor;
+}
+
+.sIn {
+  color: var(--green);
+}
+
+.sLow {
+  color: var(--amber);
+}
+
+.sOut {
+  color: var(--red);
+}
+
+.sOrder {
+  color: var(--blue);
+}
+
+.where {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray);
+  border-top: 2px dashed var(--soft);
+  padding-top: 8px;
+}
+
+.empty {
+  text-align: center;
+  padding: 28px;
+  border: 3px dashed var(--ink);
+  font-weight: 600;
+}
+
+.note {
+  margin-top: 16px;
+}
+
+.fine {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.synced {
+  min-width: 1px;
+}

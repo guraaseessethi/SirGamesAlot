@@ -1,0 +1,19 @@
+.sign {
+  font-family: var(--display);
+  color: var(--yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--ink);
+  white-space: nowrap;
+}
+
+.d20 {
+  display: inline-block;
+  width: 0.78em;
+  height: 0.86em;
+  vertical-align: -0.04em;
+  margin: 0 0.02em;
+}

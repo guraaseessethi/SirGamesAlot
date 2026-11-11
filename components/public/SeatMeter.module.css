@@ -1,0 +1,24 @@
+.bar {
+  height: 10px;
+  border: 2px solid var(--ink);
+  margin-top: 6px;
+  max-width: 220px;
+  background: #fff;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+}
+
+.hot i {
+  background: var(--red);
+}
+
+.text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray);
+  margin-top: 3px;
+}

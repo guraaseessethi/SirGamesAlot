@@ -1,0 +1,272 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.flyer {
+  border: 3px solid var(--ink);
+  box-shadow: 7px 7px 0 var(--ink);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background: #fff;
+}
+
+.p1 {
+  grid-column: 1 / -1;
+  background: var(--yellow);
+  padding: 22px;
+  border-bottom: 3px solid var(--ink);
+}
+
+.flyerTitle {
+  font-family: var(--comic);
+  font-weight: 400;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 0.95;
+  letter-spacing: 0.03em;
+  color: var(--red);
+  -webkit-text-stroke: 1.5px var(--ink);
+  paint-order: stroke fill;
+}
+
+.when {
+  font-weight: 800;
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+.p2 {
+  background: var(--blue);
+  color: #fff;
+  padding: 18px;
+  border-right: 3px solid var(--ink);
+}
+
+.p2 ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.p2 li::before {
+  content: '★ ';
+  color: var(--yellow);
+}
+
+.p3 {
+  background: var(--red);
+  color: #fff;
+  padding: 18px;
+  font-weight: 700;
+}
+
+.p3 b {
+  font-family: var(--comic);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--yellow);
+  display: block;
+  line-height: 1;
+}
+
+.past {
+  margin-top: 22px;
+  border-top: 3px solid var(--ink);
+  padding-top: 10px;
+}
+
+.pastTitle {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+.pastList {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.pastList li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 2px dashed var(--soft);
+  font-size: 14.5px;
+}
+
+.pastDate {
+  font-weight: 800;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filters button {
+  font-weight: 800;
+  font-size: 13px;
+  min-height: 36px;
+  border: 2px solid var(--ink);
+  background: #fff;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.filters button[aria-pressed='true'] {
+  background: var(--red);
+  color: #fff;
+}
+
+.cal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ev {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border: 3px solid var(--ink);
+  background: #fff;
+  padding: 12px;
+}
+
+.date {
+  text-align: center;
+  border: 2px solid var(--ink);
+  background: var(--yellow);
+  padding: 6px 2px;
+  line-height: 1.05;
+}
+
+.m {
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.d {
+  font-family: var(--display);
+  font-size: 26px;
+}
+
+.w {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.title a {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.info {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.act {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+}
+
+.fee {
+  font-family: var(--display);
+  font-size: 15px;
+}
+
+.drop {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray);
+}
+
+.link {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  min-height: 24px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.empty {
+  border: 3px dashed var(--ink);
+  padding: 22px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.fineprint {
+  margin-top: 14px;
+}
+
+.fee2 {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--gray);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .flyer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .p2 {
+    border-right: 0;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .ev {
+    grid-template-columns: 60px minmax(0, 1fr);
+  }
+
+  .act {
+    grid-column: 1 / -1;
+    grid-template-columns: auto auto auto;
+    justify-content: space-between;
+    align-items: center;
+    justify-items: start;
+  }
+
+  .pastList li {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+}
